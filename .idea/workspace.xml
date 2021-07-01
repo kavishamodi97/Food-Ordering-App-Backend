@@ -4,7 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="2187793b-e64d-48fa-93dc-77d9c32a3738" name="Default" comment="Commit with Customer DAO for Customer Entity Class">
+    <list default="true" id="2187793b-e64d-48fa-93dc-77d9c32a3738" name="Default" comment="Commit with CustomerAuthEntity Class">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -406,7 +406,7 @@
       <workItem from="1545232696710" duration="1008000" />
       <workItem from="1625054754431" duration="2452000" />
       <workItem from="1625111841298" duration="1976000" />
-      <workItem from="1625131326659" duration="2846000" />
+      <workItem from="1625131326659" duration="4243000" />
     </task>
     <task id="LOCAL-00001" summary="Commit with Initial Project And Database Setup">
       <created>1625060045495</created>
@@ -429,7 +429,14 @@
       <option name="project" value="LOCAL" />
       <updated>1625136696446</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="Commit with CustomerAuthEntity Class">
+      <created>1625138400396</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1625138400396</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TestHistory">
@@ -558,7 +565,8 @@
     <MESSAGE value="Commit with Initial Project And Database Setup" />
     <MESSAGE value="Commit with Customer Entity Class" />
     <MESSAGE value="Commit with Customer DAO for Customer Entity Class" />
-    <option name="LAST_COMMIT_MESSAGE" value="Commit with Customer DAO for Customer Entity Class" />
+    <MESSAGE value="Commit with CustomerAuthEntity Class" />
+    <option name="LAST_COMMIT_MESSAGE" value="Commit with CustomerAuthEntity Class" />
   </component>
   <component name="editorHistoryManager">
     <entry file="file://$PROJECT_DIR$/FoodOrderingApp-service/src/main/java/com/upgrad/FoodOrderingApp/service/entity/StateEntity.java" />
