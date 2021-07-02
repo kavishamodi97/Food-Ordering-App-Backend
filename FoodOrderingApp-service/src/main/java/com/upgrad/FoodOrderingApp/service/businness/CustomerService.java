@@ -79,7 +79,7 @@ public class CustomerService {
      * @throws AuthenticationFailedException Exception
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public CustomerAuthEntity authenticateCustomer(String contactNumber, String password) throws AuthenticationFailedException {
+    public CustomerAuthEntity authenticate(String contactNumber, String password) throws AuthenticationFailedException {
         CustomerEntity customerEntity = customerDao.getCustomerByContactNumber(contactNumber);
         if (customerEntity == null) {
             throw new AuthenticationFailedException("ATH-001", "This contact number has not been registered!");

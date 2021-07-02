@@ -1,5 +1,5 @@
 package com.upgrad.FoodOrderingApp.api.controller;
-/*
+
 import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerAuthEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
@@ -131,7 +131,6 @@ public class CustomerControllerTest {
     }
 
 
-
     // ----------------------------- POST /customer/login --------------------------------
 
     //This test case passes when you are able to login successfully.
@@ -197,7 +196,8 @@ public class CustomerControllerTest {
                 .andExpect(jsonPath("code").value("ATH-002"));
         verify(mockCustomerService, times(1)).authenticate("9090909090", "IncorrectPassword");
     }
-
+}
+/*
     // ----------------------------- POST /customer/logout --------------------------------
 
     //This test case passes when you are able to logout successfully.
