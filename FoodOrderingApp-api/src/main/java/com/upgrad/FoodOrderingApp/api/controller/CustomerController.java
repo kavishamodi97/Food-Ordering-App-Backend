@@ -117,4 +117,37 @@ public class CustomerController {
 
         return new ResponseEntity<>(logoutResponse, HttpStatus.OK);
     }
+
+    /**
+     * Handles Customer Details Update Request
+     *
+     * @param authorization         Access Token
+     * @param updateCustomerRequest Customer Details
+     * @return Updated Customer Details
+     * @throws AuthorizationFailedException Exception in case of Authorization Fails
+     * @throws UpdateCustomerException      Exception in case of Customer Details Update Fails
+     */
+    @CrossOrigin
+    @RequestMapping(method = RequestMethod.PUT, path = "", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UpdateCustomerResponse> updateCustomerDetails(@RequestHeader("authorization") final String authorization, @RequestBody(required = false) UpdateCustomerRequest updateCustomerRequest) throws AuthorizationFailedException, UpdateCustomerException {
+
+        utilityProvider.checkIfUpdateCustomerRequestIsValid(updateCustomerRequest.getFirstName());
+
+        String accessToken = authorization.split("Bearer ")[1];
+
+        CustomerEntity toBeUpdatedCustomerEntity = customerService.getCustomer(accessToken);
+
+        toBeUpdatedCustomerEntity.setFirstName(updateCustomerRequest.getFirstName());
+        toBeUpdatedCustomerEntity.setLastName(updateCustomerRequest.getLastName());
+
+        CustomerEntity updatedCustomerEntity = customerService.updateCustomer(toBeUpdatedCustomerEntity);
+
+        UpdateCustomerResponse updateCustomerResponse = new UpdateCustomerResponse()
+                .firstName(updatedCustomerEntity.getFirstName())
+                .lastName(updatedCustomerEntity.getLastName())
+                .id(updatedCustomerEntity.getUuid())
+                .status("CUSTOMER DETAILS UPDATED SUCCESSFULLY");
+
+        return new ResponseEntity<>(updateCustomerResponse, HttpStatus.OK);
+    }
 }
