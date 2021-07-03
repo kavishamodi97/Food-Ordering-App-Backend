@@ -150,4 +150,34 @@ public class CustomerController {
 
         return new ResponseEntity<>(updateCustomerResponse, HttpStatus.OK);
     }
+
+    /**
+     * Handles Password Change Request
+     *
+     * @param authorization         Access Token
+     * @param updatePasswordRequest Password Request Details
+     * @return UUID
+     * @throws AuthorizationFailedException Exception in case of Authorization Fails
+     * @throws UpdateCustomerException      Exception in case of Customer Details Update Fails
+     */
+    @CrossOrigin
+    @RequestMapping(method = RequestMethod.PUT, path = "/password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<UpdatePasswordResponse> updateCustomerPassword(@RequestHeader("authorization") final String authorization, @RequestBody(required = false) UpdatePasswordRequest updatePasswordRequest) throws AuthorizationFailedException, UpdateCustomerException {
+        utilityProvider.checkIfUpdatePasswordRequestIsValid(updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
+
+        String accessToken = authorization.split("Bearer ")[1];
+
+        String oldPassword = updatePasswordRequest.getOldPassword();
+        String newPassword = updatePasswordRequest.getNewPassword();
+
+        CustomerEntity toBeUpdatedCustomerEntity = customerService.getCustomer(accessToken);
+
+        CustomerEntity updatedCustomerEntity = customerService.updateCustomerPassword(oldPassword, newPassword, toBeUpdatedCustomerEntity);
+
+        UpdatePasswordResponse updatePasswordResponse = new UpdatePasswordResponse()
+                .id(updatedCustomerEntity.getUuid())
+                .status("CUSTOMER PASSWORD UPDATED SUCCESSFULLY");
+
+        return new ResponseEntity<>(updatePasswordResponse, HttpStatus.OK);
+    }
 }
