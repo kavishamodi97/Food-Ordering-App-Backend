@@ -17,6 +17,7 @@ public class CustomerDao {
 
     /**
      * Save a Customer Details in the Database
+     *
      * @param customerEntity Customer Details to be Saved
      * @return Saved Customer Details
      */
@@ -27,6 +28,7 @@ public class CustomerDao {
 
     /**
      * Update the Customer Details
+     *
      * @param customerToBeUpdated Customer Details to be Updated
      * @return Updated Customer Details
      */
@@ -37,6 +39,7 @@ public class CustomerDao {
 
     /**
      * Get the Customer Details based on the UUID
+     *
      * @param uuid UUID of the Customer
      * @return Customer details matching the UUID or NULL
      */
@@ -51,6 +54,7 @@ public class CustomerDao {
 
     /**
      * Get the Customer Details based on the Contact Number
+     *
      * @param contact_number Contact Number of the Customer
      * @return Customer details matching the Contact Number or NULL
      */

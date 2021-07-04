@@ -26,7 +26,7 @@ import java.util.UUID;
  */
 @CrossOrigin
 @RestController
-@RequestMapping("/customer")
+@RequestMapping("/")
 public class CustomerController {
     @Autowired
     CustomerService customerService;
@@ -42,7 +42,7 @@ public class CustomerController {
      * @throws SignUpRestrictedException Exception
      */
     @CrossOrigin
-    @RequestMapping(method = RequestMethod.POST, path = "/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "customer/signup", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SignupCustomerResponse> signUpCustomer(@RequestBody(required = false) final SignupCustomerRequest signupCustomerRequest) throws SignUpRestrictedException {
         CustomerEntity customerEntity = new CustomerEntity();
         customerEntity.setFirstName(signupCustomerRequest.getFirstName());
@@ -69,7 +69,7 @@ public class CustomerController {
      * @throws AuthenticationFailedException Exception
      */
     @CrossOrigin
-    @RequestMapping(method = RequestMethod.POST, path = "/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "customer/login", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<LoginResponse> loginCustomer(@RequestHeader("authorization") final String authorization) throws AuthenticationFailedException {
         utilityProvider.checkIfAuthorizationFormatIsValid(authorization);
 
@@ -105,7 +105,7 @@ public class CustomerController {
      * @throws AuthorizationFailedException Exception
      */
     @CrossOrigin
-    @RequestMapping(method = RequestMethod.POST, path = "/logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.POST, path = "/customer/logout", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<LogoutResponse> logoutCustomer(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
         String accessToken = authorization.split("Bearer ")[1];
 
@@ -128,7 +128,7 @@ public class CustomerController {
      * @throws UpdateCustomerException      Exception in case of Customer Details Update Fails
      */
     @CrossOrigin
-    @RequestMapping(method = RequestMethod.PUT, path = "", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, path = "/customer", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UpdateCustomerResponse> updateCustomerDetails(@RequestHeader("authorization") final String authorization, @RequestBody(required = false) UpdateCustomerRequest updateCustomerRequest) throws AuthorizationFailedException, UpdateCustomerException {
 
         utilityProvider.checkIfUpdateCustomerRequestIsValid(updateCustomerRequest.getFirstName());
@@ -161,7 +161,7 @@ public class CustomerController {
      * @throws UpdateCustomerException      Exception in case of Customer Details Update Fails
      */
     @CrossOrigin
-    @RequestMapping(method = RequestMethod.PUT, path = "/password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    @RequestMapping(method = RequestMethod.PUT, path = "/customer/password", consumes = MediaType.APPLICATION_JSON_UTF8_VALUE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<UpdatePasswordResponse> updateCustomerPassword(@RequestHeader("authorization") final String authorization, @RequestBody(required = false) UpdatePasswordRequest updatePasswordRequest) throws AuthorizationFailedException, UpdateCustomerException {
         utilityProvider.checkIfUpdatePasswordRequestIsValid(updatePasswordRequest.getOldPassword(), updatePasswordRequest.getNewPassword());
 

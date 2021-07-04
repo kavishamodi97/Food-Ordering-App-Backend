@@ -87,23 +87,20 @@ public class CustomerService {
 
         String encryptedPassword = PasswordCryptographyProvider.encrypt(password, customerEntity.getSalt());
 
-        if (encryptedPassword.equals(customerEntity.getPassword())) {
-            JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
-            CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
-            customerAuthEntity.setCustomer(customerEntity);
+        JwtTokenProvider jwtTokenProvider = new JwtTokenProvider(encryptedPassword);
+        CustomerAuthEntity customerAuthEntity = new CustomerAuthEntity();
+        customerAuthEntity.setCustomer(customerEntity);
 
-            final ZonedDateTime now = ZonedDateTime.now();
-            final ZonedDateTime expiresAt = now.plusHours(8);
+        final ZonedDateTime now = ZonedDateTime.now();
+        final ZonedDateTime expiresAt = now.plusHours(8);
 
-            customerAuthEntity.setAccessToken(jwtTokenProvider.generateToken(customerEntity.getUuid(), now, expiresAt));
-            customerAuthEntity.setLoginAt(now);
-            customerAuthEntity.setExpiresAt(expiresAt);
-            customerAuthEntity.setUuid(UUID.randomUUID().toString());
+        customerAuthEntity.setAccessToken(jwtTokenProvider.generateToken(customerEntity.getUuid(), now, expiresAt));
+        customerAuthEntity.setLoginAt(now);
+        customerAuthEntity.setExpiresAt(expiresAt);
+        customerAuthEntity.setUuid(UUID.randomUUID().toString());
 
-            return customerAuthDao.createCustomerAuth(customerAuthEntity);
-        } else {
-            throw new AuthenticationFailedException("ATH-002", "Invalid Credentials");
-        }
+        return customerAuthDao.createCustomerAuth(customerAuthEntity);
+
     }
 
     /**
