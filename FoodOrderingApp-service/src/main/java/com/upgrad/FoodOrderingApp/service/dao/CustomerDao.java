@@ -12,7 +12,7 @@ import javax.persistence.PersistenceContext;
  */
 @Repository
 public class CustomerDao {
-    
+
     @PersistenceContext
     private EntityManager entityManager;
 
