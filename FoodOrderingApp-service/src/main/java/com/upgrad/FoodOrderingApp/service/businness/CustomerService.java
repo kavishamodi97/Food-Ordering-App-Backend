@@ -22,17 +22,18 @@ import java.util.UUID;
  */
 @Service
 public class CustomerService {
-    @Autowired
-    CustomerDao customerDao;
 
     @Autowired
-    PasswordCryptographyProvider passwordCryptographyProvider;
+    private CustomerDao customerDao;
 
     @Autowired
-    UtilityProvider utilityProvider;
+    private PasswordCryptographyProvider passwordCryptographyProvider;
 
     @Autowired
-    CustomerAuthDao customerAuthDao;
+    private UtilityProvider utilityProvider;
+
+    @Autowired
+    private CustomerAuthDao customerAuthDao;
 
     /**
      * Save Customer Details in the Database
@@ -114,19 +115,8 @@ public class CustomerService {
     public CustomerAuthEntity logout(String accessToken) throws AuthorizationFailedException {
 
         CustomerAuthEntity customerAuthEntity = customerAuthDao.getCustomerAuthByAccessToken(accessToken);
-
-        if (customerAuthEntity == null) {
-            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
-        }
-        if (customerAuthEntity.getLogoutAt() != null) {
-            throw new AuthorizationFailedException("ATHR-002", "Customer is logged out. Log in again to access this endpoint.");
-        }
-        final ZonedDateTime now = ZonedDateTime.now();
-
-        if (customerAuthEntity.getExpiresAt().compareTo(now) < 0) {
-            throw new AuthorizationFailedException("ATHR-003", "Your session is expired. Log in again to access this endpoint.");
-        }
-
+        CustomerEntity customerEntity = getCustomer(accessToken);
+        customerAuthEntity.setCustomer(customerEntity);
         customerAuthEntity.setLogoutAt(ZonedDateTime.now());
         return customerAuthDao.customerLogout(customerAuthEntity);
     }

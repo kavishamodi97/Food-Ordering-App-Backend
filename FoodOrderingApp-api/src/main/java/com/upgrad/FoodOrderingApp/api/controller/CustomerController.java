@@ -28,11 +28,12 @@ import java.util.UUID;
 @RestController
 @RequestMapping("/")
 public class CustomerController {
-    @Autowired
-    CustomerService customerService;
 
     @Autowired
-    UtilityProvider utilityProvider;
+    private CustomerService customerService;
+
+    @Autowired
+    private UtilityProvider utilityProvider;
 
     /**
      * Handles Signup Request
