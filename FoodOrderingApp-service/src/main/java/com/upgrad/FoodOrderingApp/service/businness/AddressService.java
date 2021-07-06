@@ -103,6 +103,12 @@ public class AddressService {
         return getStateUuid;
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<StateEntity> getAllStates() {
+        List<StateEntity> stateEntityList = stateDao.getAllStates();
+        return stateEntityList;
+    }
+
     private boolean isValidPinCode(final String pincode) {
         if (pincode.length() != 6) {
             return false;
