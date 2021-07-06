@@ -20,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
+/**
+ * Address Controller to Handle all Address Related Endpoints
+ */
 @RestController
 @RequestMapping("/")
 public class AddressController {
@@ -33,6 +36,13 @@ public class AddressController {
     @Autowired
     private AddressService addressService;
 
+    /**
+     * This endpoint is used to save address of a customer in the 'restaurantdb' database.
+     *
+     * @param authorization customer login access token in 'Bearer <access-token>' format.
+     * @return ResponseEntity<SaveAddressResponse> type object along with HttpStatus as Ok.
+     * @throws AuthorizationFailedException if any of the validation on customer access token fails.
+     */
     @CrossOrigin
     @RequestMapping(path = "address", method = RequestMethod.POST, produces = MediaType.APPLICATION_JSON_UTF8_VALUE, consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<SaveAddressResponse> saveAddress(@RequestBody(required = false) final SaveAddressRequest saveAddressRequest, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AddressNotFoundException, SaveAddressException {
@@ -63,6 +73,12 @@ public class AddressController {
         return new ResponseEntity<SaveAddressResponse>(saveAddressResponse, HttpStatus.CREATED);
     }
 
+    /**
+     * This endpoint is used retrieves all the saved addresses of a customer from 'restaurantdb' database.
+     *
+     * @param authorization customer login access token in 'Bearer <access-token>' format.
+     * @return ResponseEntity<AddressListResponse> type object along with HttpStatus as OK.
+     */
     @CrossOrigin
     @RequestMapping(path = "address/customer", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<AddressListResponse> getAllSavedAddresses(@RequestHeader("authorization") final String authorization) throws AuthorizationFailedException {
@@ -87,6 +103,14 @@ public class AddressController {
         return new ResponseEntity<AddressListResponse>(addressListResponse, HttpStatus.OK);
     }
 
+    /**
+     * This endpoint is used to delete customer address from 'restaurantdb' database
+     * address.
+     *
+     * @param addressId     Address uuid is used to fetch the correct address.
+     * @param authorization customer login access token in 'Bearer <access-token>' format.
+     * @return ResponseEntity<DeleteAddResponse> with HttpStatus as OK
+     */
     @CrossOrigin
     @RequestMapping(path = "address/{address_id}", method = RequestMethod.DELETE, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<DeleteAddressResponse> deleteSavedAddress(@PathVariable("address_id") final String addressId, @RequestHeader("authorization") final String authorization) throws AuthorizationFailedException, AddressNotFoundException {
@@ -101,6 +125,11 @@ public class AddressController {
         return new ResponseEntity<DeleteAddressResponse>(deleteAddressResponse, HttpStatus.OK);
     }
 
+    /**
+     * This endpoint is used retrieve all the states from 'restaurantdb' the database.
+     *
+     * @return ResponseEntity<StatesListResponse> type object along with HttpStatus as OK.
+     */
     @CrossOrigin
     @RequestMapping(path = "states", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<StatesListResponse> getAllStates() {

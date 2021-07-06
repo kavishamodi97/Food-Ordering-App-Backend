@@ -11,6 +11,9 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+/**
+ * Customer Address Entity representing the 'customer_address' table in the 'restaurantdb' database.
+ */
 @Entity
 @Table(name = "customer_address")
 @NamedQueries({

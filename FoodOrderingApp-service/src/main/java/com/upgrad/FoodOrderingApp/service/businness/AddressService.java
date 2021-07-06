@@ -30,6 +30,14 @@ public class AddressService {
     @Autowired
     private StateDao stateDao;
 
+    /**
+     * This method implements the logic for 'saving address' endpoint.
+     *
+     * @param addressEntity  new address will be created from given AddressEntity object.
+     * @param customerEntity saves the address of the given customer.
+     * @return AddressEntity object.
+     * @throws SaveAddressException exception if any of the validation fails on customer details.
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity saveAddress(
             final AddressEntity addressEntity, final CustomerEntity customerEntity)
@@ -60,7 +68,12 @@ public class AddressService {
         }
     }
 
-
+    /**
+     * Returns list of all the addresses of a given customer.
+     *
+     * @param customerEntity Customer whose addresses are to be returned.
+     * @return List<AddressEntity> object.
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public List<AddressEntity> getAllAddress(final CustomerEntity customerEntity) {
         List<AddressEntity> getAddressEntityList = new ArrayList<>();
@@ -71,13 +84,26 @@ public class AddressService {
         return getAddressEntityList;
     }
 
-
+    /**
+     * Delete given address from database
+     *
+     * @param addressEntity Address to be delete.
+     * @return AddressEntity type object.
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity deleteAddress(final AddressEntity addressEntity) {
         return addressDao.deleteAddress(addressEntity);
     }
 
-
+    /**
+     * This method implements logic for getting the Address using address uuid.
+     *
+     * @param addressId      Address UUID.
+     * @param customerEntity Customer whose addresses has to be fetched.
+     * @return AddressEntity object.
+     * @throws AddressNotFoundException     If any validation on address fails.
+     * @throws AuthorizationFailedException If any validation on customer fails.
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public AddressEntity getAddressByUUID(final String addressId, final CustomerEntity customerEntity) throws AddressNotFoundException, AuthorizationFailedException {
         AddressEntity addressEntity = addressDao.getAddressByUuid(addressId);
@@ -94,6 +120,13 @@ public class AddressService {
         return addressEntity;
     }
 
+    /**
+     * Returns state for a given UUID
+     *
+     * @param stateUuid UUID of the state entity
+     * @return StateEntity object.
+     * @throws AddressNotFoundException If given uuid does not exist in database.
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public StateEntity getStateByUUID(final String stateUuid) throws AddressNotFoundException {
         StateEntity getStateUuid = stateDao.getStateByUuid(stateUuid);
@@ -103,12 +136,18 @@ public class AddressService {
         return getStateUuid;
     }
 
+    /**
+     * This method implements the logic to get All the States from database.
+     *
+     * @return List<StateEntity> object.
+     */
     @Transactional(propagation = Propagation.REQUIRED)
     public List<StateEntity> getAllStates() {
         List<StateEntity> stateEntityList = stateDao.getAllStates();
         return stateEntityList;
     }
 
+    // This Method checks Whether provided pincode is in valid format or not
     private boolean isValidPinCode(final String pincode) {
         if (pincode.length() != 6) {
             return false;

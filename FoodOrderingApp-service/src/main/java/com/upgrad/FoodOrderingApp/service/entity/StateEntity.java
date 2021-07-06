@@ -10,6 +10,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+/**
+ * State Entity representing the 'state' table in the 'restaurantdb' database.
+ */
 @Entity
 @Table(name = "state")
 @NamedQueries({

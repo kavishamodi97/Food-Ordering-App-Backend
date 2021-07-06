@@ -12,6 +12,9 @@ import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
+/**
+ * Address Entity representing the 'address' table in the 'restaurantdb' database.
+ */
 @Entity
 @Table(name = "address")
 @NamedQueries({
