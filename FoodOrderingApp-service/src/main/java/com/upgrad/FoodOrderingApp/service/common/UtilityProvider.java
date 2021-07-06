@@ -1,10 +1,13 @@
 package com.upgrad.FoodOrderingApp.service.common;
 
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
-import com.upgrad.FoodOrderingApp.service.exception.*;
+import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
+import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
+import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
 import org.springframework.stereotype.Component;
 
-import java.util.*;
+import java.util.Base64;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -150,5 +153,14 @@ public class UtilityProvider {
             throw new UpdateCustomerException("UCR-003", "No field should be empty");
         }
         return true;
+    }
+
+    public static String getAccessTokenFromAuthorization(String authorization)
+            throws AuthorizationFailedException {
+        String[] authParts = authorization.split("Bearer ");
+        if (authParts.length != 2) {
+            throw new AuthorizationFailedException("ATHR-001", "Customer is not Logged in.");
+        }
+        return authParts[1];
     }
 }
