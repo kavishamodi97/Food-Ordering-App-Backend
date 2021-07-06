@@ -14,6 +14,9 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 public class AddressService {
 
@@ -56,6 +59,18 @@ public class AddressService {
         }
     }
 
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<AddressEntity> getAllAddress(final CustomerEntity customerEntity) {
+        List<AddressEntity> getAddressEntityList = new ArrayList<>();
+        List<CustomerAddressEntity> customerAddressEntityList = addressDao.getCustomerAddressByCustomer(customerEntity);
+        if (customerAddressEntityList != null || !customerAddressEntityList.isEmpty()) {
+            customerAddressEntityList.forEach(customerAddressEntity -> getAddressEntityList.add(customerAddressEntity.getAddress()));
+        }
+        return getAddressEntityList;
+    }
+
+
     @Transactional(propagation = Propagation.REQUIRED)
     public StateEntity getStateByUUID(final String stateUuid) throws AddressNotFoundException {
         StateEntity getStateUuid = stateDao.getStateByUuid(stateUuid);
@@ -64,8 +79,7 @@ public class AddressService {
         }
         return getStateUuid;
     }
-
-
+    
     private boolean isValidPinCode(final String pincode) {
         if (pincode.length() != 6) {
             return false;
