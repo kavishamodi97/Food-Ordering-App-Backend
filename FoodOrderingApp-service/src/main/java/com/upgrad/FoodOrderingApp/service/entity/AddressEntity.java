@@ -4,6 +4,8 @@ import org.apache.commons.lang3.builder.EqualsBuilder;
 import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -12,6 +14,9 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "address")
+@NamedQueries({
+        @NamedQuery(name = "getAddressByUuid", query = "select a from AddressEntity a where a.uuid = :addressUuid"),
+})
 public class AddressEntity implements Serializable {
 
     @Id
@@ -40,18 +45,24 @@ public class AddressEntity implements Serializable {
     @Column(name = "pincode")
     private String pincode;
 
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "state_id")
+    private StateEntity state;
+
     @Column(name = "active")
     private Integer active;
 
     public AddressEntity() {
     }
 
-    public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, Integer active) {
+    public AddressEntity(String uuid, String flatBuilNo, String locality, String city, String pincode, StateEntity state, Integer active) {
         this.uuid = uuid;
         this.flatBuilNo = flatBuilNo;
         this.locality = locality;
         this.city = city;
         this.pincode = pincode;
+        this.state = state;
         this.active = active;
     }
 
@@ -101,6 +112,14 @@ public class AddressEntity implements Serializable {
 
     public void setPincode(String pincode) {
         this.pincode = pincode;
+    }
+
+    public StateEntity getState() {
+        return state;
+    }
+
+    public void setState(StateEntity state) {
+        this.state = state;
     }
 
     public Integer getActive() {
