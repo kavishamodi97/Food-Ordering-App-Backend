@@ -83,7 +83,7 @@ public class AddressService {
         AddressEntity addressEntity = addressDao.getAddressByUuid(addressId);
         CustomerAddressEntity customerAddressEntity = customerAddressDao.customerAddressByAddress(addressEntity);
         if (addressEntity == null) {
-            throw new AddressNotFoundException("ANF-003", "No address by this id)");
+            throw new AddressNotFoundException("ANF-003", "No address by this id");
         }
         if (addressId.isEmpty()) {
             throw new AddressNotFoundException("ANF-005", "Address id can not be empty");
