@@ -6,12 +6,14 @@ import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -55,5 +57,19 @@ public class RestaurantService {
     @Transactional(propagation = Propagation.REQUIRED)
     public List<RestaurantCategoryEntity> getCategories(RestaurantEntity restaurantEntity) {
        return restaurantCategoryDao.getRestaurantCategories(restaurantEntity.getId());
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<RestaurantEntity> getRestaurantByCategory(String categoryId) throws CategoryNotFoundException {
+        if(categoryId.isEmpty())
+            throw new CategoryNotFoundException("CNF-001","Category id field should not be empty");
+        List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantCategoryDao.getRestaurantByCategoryUuid(categoryId);
+        if(restaurantCategoryEntities.size()==0)
+            throw new CategoryNotFoundException("CNF-002","No category by this id");
+        List<RestaurantEntity> restaurantEntities = new ArrayList<>();
+        for(int i=0;i<restaurantCategoryEntities.size();i++){
+            restaurantEntities.add(restaurantCategoryEntities.get(i).getRestaurantEntity());
+        }
+        return restaurantEntities;
     }
 }

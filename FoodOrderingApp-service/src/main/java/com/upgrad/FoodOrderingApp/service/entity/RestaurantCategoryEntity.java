@@ -11,7 +11,13 @@ import java.util.Objects;
         @NamedQuery(name="getRestaurantCategories",
                 query = "select c from RestaurantCategoryEntity c " +
                         "where c.restaurantEntity.id = :restaurantId " +
-                        "order by c.categoryEntity.categoryName ASC ")
+                        "order by c.categoryEntity.categoryName ASC "),
+        @NamedQuery(name="getRestaurantByCategories",
+                query = "select r from RestaurantCategoryEntity r " +
+                        "where r.categoryEntity.uuid = :categoryId " +
+                        "order by r.restaurantEntity.restaurantName ASC ")
+
+
 })
 
 public class RestaurantCategoryEntity {
