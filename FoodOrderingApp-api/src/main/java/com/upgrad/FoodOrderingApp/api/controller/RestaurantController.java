@@ -166,6 +166,18 @@ getAllRestaurantsByUuid(@PathVariable("restaurant_id") final String restaurantId
 
                restaurantDetailsResponseAddress.state(restaurantDetailsResponseAddressState);
            restaurantDetailsResponse.address(restaurantDetailsResponseAddress);
+
+    List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantService.getCategories(restaurantEntity);
+    List<CategoryList> categoryLists = new ArrayList<>();
+    for (int j = 0; j < restaurantCategoryEntities.size(); j++) {
+        CategoryEntity categoryEntity = restaurantCategoryEntities.get(j).getCategoryEntity();
+        CategoryList categoryList = new CategoryList();
+        categoryList.categoryName(categoryEntity.getCategoryName());
+        categoryLists.add(categoryList);
+    }
+
+    restaurantDetailsResponse.categories(categoryLists);
+
         return new ResponseEntity<>(restaurantDetailsResponse,HttpStatus.OK);
 }
 
@@ -173,7 +185,7 @@ getAllRestaurantsByUuid(@PathVariable("restaurant_id") final String restaurantId
 ///////
 //
 //
-//    Update Restaurant Details
+//    Update Restaurant Details -Not Completed
 //
 
     @RequestMapping(method = RequestMethod.PUT,path="/api/restaurant/{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
