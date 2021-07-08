@@ -68,4 +68,12 @@ public class AddressDao {
             return null;
         }
     }
+
+    public AddressEntity getAddressByRestaurantId(Integer restaurantId) {
+        try {
+            return entityManager.createNamedQuery("getRestaurantAddressById", AddressEntity.class).setParameter("restaurantId", restaurantId).getSingleResult();
+        } catch (NoResultException nre) {
+            return null;
+        }
+    }
 }
