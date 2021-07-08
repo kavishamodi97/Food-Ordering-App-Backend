@@ -13,9 +13,9 @@ public class CategoryItemEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @OneToOne
+    @OneToMany
     @Column(name = "item_id")
-    private ItemEntity itemEntity;
+    private List<ItemEntity> itemEntity;
 
     @ManyToOne
     @JoinColumn(name = "category_id")
@@ -29,11 +29,11 @@ public class CategoryItemEntity {
         this.id = id;
     }
 
-    public ItemEntity getItemEntity() {
+    public List<ItemEntity> getItemEntity() {
         return itemEntity;
     }
 
-    public void setItemEntity(ItemEntity itemEntity) {
+    public void setItemEntity(List<ItemEntity> itemEntity) {
         this.itemEntity = itemEntity;
     }
 
