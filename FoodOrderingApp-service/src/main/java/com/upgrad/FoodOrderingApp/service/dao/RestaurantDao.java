@@ -4,6 +4,7 @@ import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
+import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
 
@@ -22,7 +23,13 @@ public class RestaurantDao {
     }
 
     public RestaurantEntity getRestaurantByUuid(String restaurantUuid) {
-        return entityManager.createNamedQuery("getRestaurantByUuid",RestaurantEntity.class)
-                .setParameter("restaurantUuid",restaurantUuid).getSingleResult();
+        try{
+            return entityManager.createNamedQuery("getRestaurantByUuid",RestaurantEntity.class)
+                    .setParameter("restaurantUuid",restaurantUuid).getSingleResult();
+        }
+        catch (NoResultException nre){
+            return null;
+        }
+
     }
 }

@@ -7,6 +7,7 @@ import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
+import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -118,7 +119,7 @@ public class RestaurantController {
 @CrossOrigin
 @RequestMapping(path = "/api/restaurant/{restaurant_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
 public ResponseEntity<RestaurantDetailsResponse>
-getAllRestaurantsByUuid(@PathVariable("restaurant_id") final String restaurantId){
+getAllRestaurantsByUuid(@PathVariable("restaurant_id") final String restaurantId) throws RestaurantNotFoundException {
     final RestaurantEntity restaurantEntity = restaurantService.getRestaurantByUuid(restaurantId);
         RestaurantDetailsResponse restaurantDetailsResponse = new RestaurantDetailsResponse();
         restaurantDetailsResponse.id(UUID.fromString(restaurantEntity.getUuid()));
