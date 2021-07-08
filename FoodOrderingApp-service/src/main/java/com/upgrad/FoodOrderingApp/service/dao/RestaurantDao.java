@@ -20,4 +20,9 @@ public class RestaurantDao {
         return entityManager.createNamedQuery("getAllRestaurantsByName",RestaurantEntity.class)
                 .setParameter("restaurantName",restaurantName).getResultList();
     }
+
+    public RestaurantEntity getRestaurantByUuid(String restaurantUuid) {
+        return entityManager.createNamedQuery("getRestaurantByUuid",RestaurantEntity.class)
+                .setParameter("restaurantUuid",restaurantUuid).getSingleResult();
+    }
 }

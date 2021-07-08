@@ -31,7 +31,13 @@ public class RestaurantService {
         return addressDao.getAddressByRestaurantId(restaurantId);
     }
 
+    @Transactional(propagation = Propagation.REQUIRED)
     public List<RestaurantEntity> getAllRestaurantsByName(String restaurantName) {
         return restaurantDao.getAllRestaurantsByName(restaurantName);
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public RestaurantEntity getRestaurantByUuid(String restaurantUuid) {
+        return restaurantDao.getRestaurantByUuid(restaurantUuid);
     }
 }

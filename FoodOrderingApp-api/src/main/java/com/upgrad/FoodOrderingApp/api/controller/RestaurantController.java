@@ -110,5 +110,44 @@ public class RestaurantController {
         return new ResponseEntity<>(restaurantDetailsResponsesList,HttpStatus.OK);
     }
 
+//
+//
+//    Get all restaurants by restaurantId -> UUid
+//
+//
+@CrossOrigin
+@RequestMapping(path = "/api/restaurant/{restaurant_id}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+public ResponseEntity<RestaurantDetailsResponse>
+getAllRestaurantsByUuid(@PathVariable("restaurant_id") final String restaurantId){
+    final RestaurantEntity restaurantEntity = restaurantService.getRestaurantByUuid(restaurantId);
+        RestaurantDetailsResponse restaurantDetailsResponse = new RestaurantDetailsResponse();
+        restaurantDetailsResponse.id(UUID.fromString(restaurantEntity.getUuid()));
+        restaurantDetailsResponse.restaurantName(restaurantEntity.getRestaurantName());
+        restaurantDetailsResponse.photoURL(restaurantEntity.getPhotoUrl());
+        restaurantDetailsResponse.customerRating(restaurantEntity.getCustomerRating());
+        restaurantDetailsResponse.averagePrice(restaurantEntity.getAveragePrice());
+        restaurantDetailsResponse.numberCustomersRated(restaurantEntity.getNoOfCustomerRated());
+
+
+        RestaurantDetailsResponseAddress restaurantDetailsResponseAddress = new RestaurantDetailsResponseAddress();
+        AddressEntity addressEntity =  restaurantService.getRestaurantAddress(restaurantEntity.getId());
+        restaurantDetailsResponseAddress.city(addressEntity.getCity());
+        restaurantDetailsResponseAddress.flatBuildingName(addressEntity.getFlatBuilNo());
+        restaurantDetailsResponseAddress.id(UUID.fromString(addressEntity.getUuid()));
+        restaurantDetailsResponseAddress.locality(addressEntity.getLocality());
+        restaurantDetailsResponseAddress.pincode(addressEntity.getPincode());
+
+
+        RestaurantDetailsResponseAddressState restaurantDetailsResponseAddressState = new RestaurantDetailsResponseAddressState();
+        StateEntity stateEntity = addressEntity.getState();
+        restaurantDetailsResponseAddressState.id(UUID.fromString(stateEntity.getUuid()));
+        restaurantDetailsResponseAddressState.stateName(stateEntity.getStateName());
+        restaurantDetailsResponseAddress.state(restaurantDetailsResponseAddressState);
+
+        restaurantDetailsResponse.address(restaurantDetailsResponseAddress);
+
+    return new ResponseEntity<>(restaurantDetailsResponse,HttpStatus.OK);
+}
+
 
 }
