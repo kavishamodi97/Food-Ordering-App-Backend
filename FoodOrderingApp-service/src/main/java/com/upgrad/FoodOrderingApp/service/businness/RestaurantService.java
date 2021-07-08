@@ -30,4 +30,8 @@ public class RestaurantService {
 
         return addressDao.getAddressByRestaurantId(restaurantId);
     }
+
+    public List<RestaurantEntity> getAllRestaurantsByName(String restaurantName) {
+        return restaurantDao.getAllRestaurantsByName(restaurantName);
+    }
 }

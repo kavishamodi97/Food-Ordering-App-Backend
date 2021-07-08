@@ -13,6 +13,10 @@ import java.util.Objects;
 
 @NamedQueries({
         @NamedQuery(name="getAllRestaurants",query = "select a from RestaurantEntity a"),
+        @NamedQuery(name="getAllRestaurantsByName",
+                query = "select a from RestaurantEntity a " +
+                        "where   lower(a.restaurantName) like lower(concat('%', :restaurantName,'%')) " +
+                        "ORDER BY a.restaurantName ASC"),
 })
 public class RestaurantEntity implements Serializable {
     @Id
