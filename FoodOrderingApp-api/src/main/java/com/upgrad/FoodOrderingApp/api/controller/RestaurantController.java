@@ -1,8 +1,12 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
 import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponse;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddress;
+import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressState;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
+import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.entity.StateEntity;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -37,6 +41,25 @@ public class RestaurantController {
             restaurantDetailsResponse.customerRating(restaurantEntityTmp.getCustomerRating());
             restaurantDetailsResponse.averagePrice(restaurantEntityTmp.getAveragePrice());
             restaurantDetailsResponse.numberCustomersRated(restaurantEntityTmp.getNoOfCustomerRated());
+
+
+            RestaurantDetailsResponseAddress restaurantDetailsResponseAddress = new RestaurantDetailsResponseAddress();
+            AddressEntity addressEntity =  restaurantService.getRestaurantAddress(restaurantEntityTmp.getId());
+            restaurantDetailsResponseAddress.city(addressEntity.getCity());
+            restaurantDetailsResponseAddress.flatBuildingName(addressEntity.getFlatBuilNo());
+            restaurantDetailsResponseAddress.id(UUID.fromString(addressEntity.getUuid()));
+            restaurantDetailsResponseAddress.locality(addressEntity.getLocality());
+            restaurantDetailsResponseAddress.pincode(addressEntity.getPincode());
+
+
+            RestaurantDetailsResponseAddressState restaurantDetailsResponseAddressState = new RestaurantDetailsResponseAddressState();
+            StateEntity stateEntity = addressEntity.getState();
+            restaurantDetailsResponseAddressState.id(UUID.fromString(stateEntity.getUuid()));
+            restaurantDetailsResponseAddressState.stateName(stateEntity.getStateName());
+            restaurantDetailsResponseAddress.state(restaurantDetailsResponseAddressState);
+
+            restaurantDetailsResponse.address(restaurantDetailsResponseAddress);
+
             restaurantDetailsResponsesList.add(restaurantDetailsResponse);
         }
         return new ResponseEntity<>(restaurantDetailsResponsesList,HttpStatus.OK);
