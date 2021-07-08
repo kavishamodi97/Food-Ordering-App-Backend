@@ -1,0 +1,9 @@
+<changelist name="Uncommitted_changes_before_Checkout_at_06-07-2021_02_13_PM_[Default]1" date="1625561023790" recycled="true" deleted="true">
+  <option name="PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_06-07-2021_02_13_PM_[Default]1/shelved.patch" />
+  <option name="DESCRIPTION" value="Uncommitted changes before Checkout at 06-07-2021 02:13 PM [Default]" />
+  <binary>
+    <option name="BEFORE_PATH" value="FoodOrderingApp-service/target/classes/com/upgrad/FoodOrderingApp/service/dao/CustomerDao.class" />
+    <option name="AFTER_PATH" value="FoodOrderingApp-service/target/classes/com/upgrad/FoodOrderingApp/service/dao/CustomerDao.class" />
+    <option name="SHELVED_PATH" value="$PROJECT_DIR$/.idea/shelf/Uncommitted_changes_before_Checkout_at_06-07-2021_02_13_PM_[Default]1/CustomerDao.class" />
+  </binary>
+</changelist>

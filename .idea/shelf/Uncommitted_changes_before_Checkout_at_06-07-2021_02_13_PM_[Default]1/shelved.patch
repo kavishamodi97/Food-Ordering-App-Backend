@@ -1,0 +1,33 @@
+Index: .idea/dataSources.local.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"UTF-8\"?>\r\n<project version=\"4\">\r\n  <component name=\"dataSourceStorageLocal\">\r\n    <data-source name=\"restaurantdb@localhost\" uuid=\"11248553-3cba-4883-afcd-9f0adce598c1\">\r\n      <database-info product=\"PostgreSQL\" version=\"13.1\" jdbc-version=\"4.2\" driver-name=\"PostgreSQL JDBC Driver\" driver-version=\"42.2.5\" dbms=\"POSTGRES\" exact-version=\"13.1\" exact-driver-version=\"42.2\">\r\n        <identifier-quote-string>&quot;</identifier-quote-string>\r\n      </database-info>\r\n      <case-sensitivity plain-identifiers=\"lower\" quoted-identifiers=\"exact\" />\r\n      <secret-storage>master_key</secret-storage>\r\n      <user-name>postgres</user-name>\r\n      <schema-mapping>\r\n        <introspection-scope>\r\n          <node kind=\"database\" qname=\"@\">\r\n            <node kind=\"schema\" qname=\"@\" />\r\n          </node>\r\n        </introspection-scope>\r\n      </schema-mapping>\r\n    </data-source>\r\n  </component>\r\n</project>
+===================================================================
+diff --git a/.idea/dataSources.local.xml b/.idea/dataSources.local.xml
+--- a/.idea/dataSources.local.xml	
++++ b/.idea/dataSources.local.xml	
+@@ -1,20 +1,9 @@
+ <?xml version="1.0" encoding="UTF-8"?>
+ <project version="4">
+-  <component name="dataSourceStorageLocal">
++  <component name="dataSourceStorageLocal" created-in="IU-211.7142.45">
+     <data-source name="restaurantdb@localhost" uuid="11248553-3cba-4883-afcd-9f0adce598c1">
+-      <database-info product="PostgreSQL" version="13.1" jdbc-version="4.2" driver-name="PostgreSQL JDBC Driver" driver-version="42.2.5" dbms="POSTGRES" exact-version="13.1" exact-driver-version="42.2">
+-        <identifier-quote-string>&quot;</identifier-quote-string>
+-      </database-info>
+-      <case-sensitivity plain-identifiers="lower" quoted-identifiers="exact" />
+-      <secret-storage>master_key</secret-storage>
+-      <user-name>postgres</user-name>
+-      <schema-mapping>
+-        <introspection-scope>
+-          <node kind="database" qname="@">
+-            <node kind="schema" qname="@" />
+-          </node>
+-        </introspection-scope>
+-      </schema-mapping>
++      <database-info product="" version="" jdbc-version="" driver-name="" driver-version="" dbms="POSTGRES" exact-version="0" />
++      <schema-mapping />
+     </data-source>
+   </component>
+ </project>
+\ No newline at end of file
