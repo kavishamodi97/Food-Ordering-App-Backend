@@ -6,6 +6,14 @@ import java.util.Objects;
 
 @Entity
 @Table(name="restaurant_category")
+
+@NamedQueries({
+        @NamedQuery(name="getRestaurantCategories",
+                query = "select c from RestaurantCategoryEntity c " +
+                        "where c.restaurantEntity.id = :restaurantId " +
+                        "order by c.categoryEntity.categoryName ASC ")
+})
+
 public class RestaurantCategoryEntity {
     @Id
     @Column(name = "id")

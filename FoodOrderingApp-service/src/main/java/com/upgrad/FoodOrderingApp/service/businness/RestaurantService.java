@@ -1,8 +1,10 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
 import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
+import com.upgrad.FoodOrderingApp.service.dao.RestaurantCategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategoryEntity;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,6 +22,9 @@ public class RestaurantService {
 
     @Autowired
     private AddressDao addressDao;
+
+    @Autowired
+    private RestaurantCategoryDao restaurantCategoryDao;
 
     @Transactional(propagation = Propagation.REQUIRED)
     public List<RestaurantEntity> getAllRestaurants(){
@@ -45,5 +50,10 @@ public class RestaurantService {
         if(restaurantEntity==null)
             throw new RestaurantNotFoundException("RNF-001","No restaurant by this id");
         return restaurantEntity;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public List<RestaurantCategoryEntity> getCategories(RestaurantEntity restaurantEntity) {
+       return restaurantCategoryDao.getRestaurantCategories(restaurantEntity.getId());
     }
 }
