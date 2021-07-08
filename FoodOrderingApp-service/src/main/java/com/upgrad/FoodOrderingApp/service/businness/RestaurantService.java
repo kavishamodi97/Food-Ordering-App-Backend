@@ -3,16 +3,18 @@ package com.upgrad.FoodOrderingApp.service.businness;
 import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantCategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
-import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantCategoryEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.entity.*;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -71,5 +73,33 @@ public class RestaurantService {
             restaurantEntities.add(restaurantCategoryEntities.get(i).getRestaurantEntity());
         }
         return restaurantEntities;
+    }
+
+    @Transactional(propagation = Propagation.REQUIRED)
+    public RestaurantEntity editRestaurantEntity(String restaurantUuid,
+                                                 Double customerRating,
+                                                 String accessToken)
+            throws AuthorizationFailedException, InvalidRatingException, RestaurantNotFoundException {
+
+//        CustomerService customerService = new CustomerService();
+//        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+
+        RestaurantEntity restaurantEntity = this.getRestaurantByUuid(restaurantUuid);
+
+        if(customerRating<1 || customerRating>5)
+            throw new InvalidRatingException("IRE-001","Restaurant should be in the range of 1 to 5");
+
+        Double noOfCustomerRated = restaurantEntity.getNoOfCustomerRated().doubleValue();
+        Double restaurantRating =  restaurantEntity.getCustomerRating().doubleValue();
+        restaurantRating=restaurantRating*noOfCustomerRated;
+        noOfCustomerRated = noOfCustomerRated+1;
+        restaurantRating = (restaurantRating+customerRating) / noOfCustomerRated ;
+        restaurantEntity.setNoOfCustomerRated(noOfCustomerRated.intValue());
+
+        restaurantEntity.setCustomerRating(BigDecimal.valueOf(restaurantRating).setScale(2,RoundingMode.HALF_UP));
+
+        return restaurantDao.editRestaurant(restaurantEntity);
+
+
     }
 }

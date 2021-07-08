@@ -1,12 +1,11 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
-import com.upgrad.FoodOrderingApp.api.model.CategoryList;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponse;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddress;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressState;
+import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
 import com.upgrad.FoodOrderingApp.service.entity.*;
+import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
+import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -262,17 +261,22 @@ public class RestaurantController {
 //    Update Restaurant Details -Not Completed
 //
 
-//    @RequestMapping(method = RequestMethod.PUT,path="/api/restaurant/{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-//    public ResponseEntity<RestaurantDetailsResponse> editRestaurant(
-//            @RequestHeader("authorization") final String authorization,
-//            @RequestParam Double customerRating,
-//            @PathVariable("restaurant_id") final String restaurantUuid) throws RestaurantNotFoundException {
-//        final RestaurantEntity restaurantEntity = restaurantService.getRestaurantByUuid(restaurantUuid);
-//        RestaurantDetailsResponse restaurantDetailsResponse= new RestaurantDetailsResponse();
-//
-////        restaurantDetailsResponse.id()
-//
-//        return new ResponseEntity<>(restaurantDetailsResponse,HttpStatus.OK);
-//    }
+    @RequestMapping(method = RequestMethod.PUT,path="/api/restaurant/{restaurant_id}",produces = MediaType.APPLICATION_JSON_UTF8_VALUE,consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RestaurantUpdatedResponse> editRestaurant(
+            @RequestHeader("authorization") final String authorization,
+            @RequestParam Double customerRating,
+            @PathVariable("restaurant_id") final String restaurantUuid)
+                throws RestaurantNotFoundException,
+                       AuthorizationFailedException,
+                       InvalidRatingException {
+        final RestaurantEntity restaurantEntity = restaurantService.editRestaurantEntity(restaurantUuid,customerRating,authorization);
+
+        RestaurantUpdatedResponse restaurantUpdatedResponse = new RestaurantUpdatedResponse()
+                .id(UUID.fromString(restaurantEntity.getUuid())).status("RESTAURANT RATING UPDATED SUCCESSFULLY");
+
+
+
+    return new ResponseEntity<>(restaurantUpdatedResponse,HttpStatus.OK);
+    }
 
 }
