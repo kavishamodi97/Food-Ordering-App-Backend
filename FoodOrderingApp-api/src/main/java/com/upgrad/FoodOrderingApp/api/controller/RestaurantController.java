@@ -115,6 +115,19 @@ public class RestaurantController {
                      restaurantDetailsResponseAddress.state(restaurantDetailsResponseAddressState);
 
                 restaurantDetailsResponse.address(restaurantDetailsResponseAddress);
+
+              List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantService.getCategories(restaurantEntityTmp);
+
+              List<CategoryList> categoryLists = new ArrayList<>();
+              for (int j = 0; j < restaurantCategoryEntities.size(); j++) {
+                  CategoryEntity categoryEntity = restaurantCategoryEntities.get(j).getCategoryEntity();
+                  CategoryList categoryList = new CategoryList();
+                  categoryList.categoryName(categoryEntity.getCategoryName());
+                  categoryLists.add(categoryList);
+              }
+
+              restaurantDetailsResponse.categories(categoryLists);
+
               restaurantDetailsResponsesList.add(restaurantDetailsResponse);
          }
        return new ResponseEntity<>(restaurantDetailsResponsesList,HttpStatus.OK);
