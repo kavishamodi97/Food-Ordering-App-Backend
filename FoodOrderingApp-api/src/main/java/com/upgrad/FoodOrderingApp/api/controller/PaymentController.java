@@ -23,6 +23,11 @@ public class PaymentController {
     @Autowired
     private PaymentService paymentService;
 
+    /**
+     * This endpoint is used to get all the payment methods
+     *
+     * @return Payment methods
+     */
     @CrossOrigin
     @RequestMapping(path = "payment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<PaymentListResponse> getPaymentMethods() {
