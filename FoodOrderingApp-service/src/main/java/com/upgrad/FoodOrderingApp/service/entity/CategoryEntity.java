@@ -1,12 +1,27 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
 import java.util.List;
 
 @Entity
 @Table(name="category")
-public class CategoryEntity {
+@NamedQueries({
+        @NamedQuery(
+                name = "categoryByUuid",
+                query = "select c from CategoryEntity c where c.uuid=:uuid order by categoryName"),
+        @NamedQuery(
+                name = "getAllCategoriesOrderedByName",
+                query = "select c from CategoryEntity c order by categoryName asc"),
+        @NamedQuery(
+                name = "getCategoriesByRestaurant",
+                query =
+                        "Select c from CategoryEntity c where id in (select rc.categoryId from RestaurantCategoryEntity rc where rc.restaurantId = "
+                                + "(select r.id from RestaurantEntity r where "
+                                + " r.uuid=:restaurantUuid) )  order by c.categoryName")
+})
+public class CategoryEntity  implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -57,7 +72,7 @@ public class CategoryEntity {
     public void setItems(List<ItemEntity> items) {
         this.items = items;
     }
-    
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
