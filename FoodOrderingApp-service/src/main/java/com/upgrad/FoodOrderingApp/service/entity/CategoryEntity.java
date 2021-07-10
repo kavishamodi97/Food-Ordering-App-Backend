@@ -1,67 +1,22 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
-import javax.persistence.CascadeType;
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.JoinTable;
-import javax.persistence.ManyToMany;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
-import javax.persistence.Table;
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
-import java.io.Serializable;
+import javax.persistence.*;
+import java.util.Objects;
 import java.util.List;
-import org.apache.commons.lang3.builder.EqualsBuilder;
-import org.apache.commons.lang3.builder.HashCodeBuilder;
-import org.apache.commons.lang3.builder.ToStringBuilder;
-import org.apache.commons.lang3.builder.ToStringStyle;
 
 @Entity
-@Table(name = "category")
-@NamedQueries({
-        @NamedQuery(
-                name = "categoryByUuid",
-                query = "select c from CategoryEntity c where c.uuid=:uuid order by categoryName"),
-        @NamedQuery(
-                name = "getAllCategoriesOrderedByName",
-                query = "select c from CategoryEntity c order by categoryName asc"),
-        @NamedQuery(
-                name = "getCategoriesByRestaurant",
-                query =
-                        "Select c from CategoryEntity c where id in (select rc.categoryId from RestaurantCategoryEntity rc where rc.restaurantId = "
-                                + "(select r.id from RestaurantEntity r where "
-                                + " r.uuid=:restaurantUuid) )  order by c.categoryName")
-})
-public class CategoryEntity implements Serializable {
+@Table(name="category")
+public class CategoryEntity {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Size(max = 200)
-    @NotNull
-    @Column(name = "uuid")
+    @Column(name="uuid")
     private String uuid;
 
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "category_name")
+    @Column(name="category_name")
     private String categoryName;
-
-    @ManyToMany(
-            fetch = FetchType.LAZY,
-            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
-    @JoinTable(
-            name = "restaurant_category",
-            joinColumns = @JoinColumn(name = "category_id"),
-            inverseJoinColumns = @JoinColumn(name = "restaurant_id"))
-    private List<RestaurantEntity> restaurants;
 
     @ManyToMany(
             fetch = FetchType.LAZY,
@@ -95,15 +50,6 @@ public class CategoryEntity implements Serializable {
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
     }
-
-    public List<RestaurantEntity> getRestaurants() {
-        return restaurants;
-    }
-
-    public void setRestaurants(List<RestaurantEntity> restaurants) {
-        this.restaurants = restaurants;
-    }
-
     public List<ItemEntity> getItems() {
         return items;
     }
@@ -111,19 +57,26 @@ public class CategoryEntity implements Serializable {
     public void setItems(List<ItemEntity> items) {
         this.items = items;
     }
-
+    
     @Override
-    public boolean equals(Object obj) {
-        return new EqualsBuilder().append(this, obj).isEquals();
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        CategoryEntity that = (CategoryEntity) o;
+        return Objects.equals(id, that.id) && Objects.equals(uuid, that.uuid) && Objects.equals(categoryName, that.categoryName);
     }
 
     @Override
     public int hashCode() {
-        return new HashCodeBuilder().append(this).hashCode();
+        return Objects.hash(id, uuid, categoryName);
     }
 
     @Override
     public String toString() {
-        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
+        return "CategoryEntity{" +
+                "id=" + id +
+                ", uuid='" + uuid + '\'' +
+                ", categoryName='" + categoryName + '\'' +
+                '}';
     }
 }
