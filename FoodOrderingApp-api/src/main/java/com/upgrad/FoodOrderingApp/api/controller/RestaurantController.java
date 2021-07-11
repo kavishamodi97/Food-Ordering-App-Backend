@@ -1,27 +1,11 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
-import java.math.BigDecimal;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
-import com.upgrad.FoodOrderingApp.api.common.Utility;
-import com.upgrad.FoodOrderingApp.api.model.CategoryList;
-import com.upgrad.FoodOrderingApp.api.model.ItemList;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponse;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddress;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantDetailsResponseAddressState;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantList;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantListResponse;
-import com.upgrad.FoodOrderingApp.api.model.RestaurantUpdatedResponse;
+import com.upgrad.FoodOrderingApp.api.model.*;
 import com.upgrad.FoodOrderingApp.service.businness.CategoryService;
 import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
 import com.upgrad.FoodOrderingApp.service.businness.ItemService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
-import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CategoryEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
-import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import com.upgrad.FoodOrderingApp.service.entity.*;
 import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
@@ -30,25 +14,28 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
 public class RestaurantController {
 
-    @Autowired private RestaurantService restaurantService;
+    @Autowired
+    private RestaurantService restaurantService;
 
-    @Autowired private ItemService itemService;
+    @Autowired
+    private ItemService itemService;
 
-    @Autowired private CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
 
-    @Autowired private CategoryService categoryService;
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * This API endpoint gets list of all restaurant in order of their ratings
@@ -104,7 +91,7 @@ public class RestaurantController {
      * @param categoryUuid UUID of the category
      * @return RestaurantListResponse
      * @throws CategoryNotFoundException if the category with the given UUID is not found in the
-     *     database.
+     *                                   database.
      */
     @CrossOrigin
     @RequestMapping(
@@ -131,7 +118,7 @@ public class RestaurantController {
      * @param restaurantUuid UUID of the restaurant whose details are requested
      * @return RestaurantDetailsResponse
      * @throws RestaurantNotFoundException if the restaurant with the UUID is not found in the
-     *     database.
+     *                                     database.
      */
     @CrossOrigin
     @RequestMapping(
@@ -153,34 +140,35 @@ public class RestaurantController {
     /**
      * This API endpoint updates the restaurant rating by customer
      *
-     * @param authorization Bearer <access-token>
+     * @param authorization  Bearer <access-token>
      * @param restaurantUuid UUID of the restaurant whose rating is to be updated.
      * @param customerRating Actual rating value that is to be updated.
      * @return
      * @throws AuthorizationFailedException if the given token is not valid.
-     * @throws RestaurantNotFoundException if the restaurant with the given uuid doesn't exist in
-     *     database.
-     * @throws InvalidRatingException if the rating is less than 1 or grater than 5.
+     * @throws RestaurantNotFoundException  if the restaurant with the given uuid doesn't exist in
+     *                                      database.
+     * @throws InvalidRatingException       if the rating is less than 1 or grater than 5.
      */
     @CrossOrigin
-    @RequestMapping(
-            method = RequestMethod.PUT,
-            path = ("/restaurant/{restaurant_id}"),
-            produces = MediaType.APPLICATION_JSON_UTF8_VALUE,
-            consumes = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<RestaurantUpdatedResponse> updateRestaurantRating(
-            @RequestHeader("authorization") final String authorization,
-            @PathVariable("restaurant_id") final String restaurantUuid,
-            @RequestParam("customer_rating") final Double customerRating)
-            throws AuthorizationFailedException, RestaurantNotFoundException, InvalidRatingException {
-        String accessToken = Utility.getTokenFromAuthorization(authorization);
+    @RequestMapping(method = RequestMethod.PUT, path = "api/restaurant/{restaurant_id}", params = "customer_rating", produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<RestaurantUpdatedResponse> updateRestaurantDetails(@RequestHeader("authorization") final String authorization, @PathVariable(value = "restaurant_id") final String restaurantUuid, @RequestParam(value = "customer_rating") final Double customerRating) throws AuthorizationFailedException, RestaurantNotFoundException, InvalidRatingException {
+
+        //Access the accessToken from the request Header
+        final String accessToken = authorization.split("Bearer ")[1];
+
+        //Calls customerService getCustomerMethod to check the validity of the customer.this methods returns the customerEntity.
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+
+        //Calls restaurantByUUID method of restaurantService to get the restaurant entity.
         RestaurantEntity restaurantEntity = restaurantService.restaurantByUUID(restaurantUuid);
-        RestaurantEntity updatedRestaurantEntity =
-                restaurantService.updateRestaurantRating(restaurantEntity, customerRating);
-        RestaurantUpdatedResponse restaurantUpdatedResponse = new RestaurantUpdatedResponse();
-        restaurantUpdatedResponse.setId(UUID.fromString(updatedRestaurantEntity.getUuid()));
-        restaurantUpdatedResponse.setStatus("RESTAURANT RATING UPDATED SUCCESSFULLY");
+
+        //Calls updateRestaurantRating and passes restaurantentity found and customer rating and return the updated entity.
+        RestaurantEntity updatedRestaurantEntity = restaurantService.updateRestaurantRating(restaurantEntity, customerRating);
+
+        //Creating RestaurantUpdatedResponse containing the UUID of the updated Restaurant and the success message.
+        RestaurantUpdatedResponse restaurantUpdatedResponse = new RestaurantUpdatedResponse()
+                .id(UUID.fromString(restaurantUuid))
+                .status("RESTAURANT RATING UPDATED SUCCESSFULLY");
 
         return new ResponseEntity<RestaurantUpdatedResponse>(restaurantUpdatedResponse, HttpStatus.OK);
     }

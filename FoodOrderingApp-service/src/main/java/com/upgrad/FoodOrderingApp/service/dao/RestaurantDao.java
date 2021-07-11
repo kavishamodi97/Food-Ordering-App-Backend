@@ -1,15 +1,17 @@
 package com.upgrad.FoodOrderingApp.service.dao;
 
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
+import org.springframework.stereotype.Repository;
+
 import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 import java.util.List;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
-import org.springframework.stereotype.Repository;
 
 @Repository
 public class RestaurantDao {
-    @PersistenceContext private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Fetch the restaurant based on UUID.
@@ -62,6 +64,17 @@ public class RestaurantDao {
     public RestaurantEntity updateRestaurantEntity(final RestaurantEntity restaurantEntity) {
         RestaurantEntity updatedRestaurantEntity = entityManager.merge(restaurantEntity);
         return updatedRestaurantEntity;
+    }
+
+    /**
+     * Update the restaurant
+     *
+     * @param restaurantEntity
+     * @return
+     */
+    public RestaurantEntity updateRating(RestaurantEntity restaurantEntity) {
+        entityManager.merge(restaurantEntity);
+        return restaurantEntity;
     }
 
     /**

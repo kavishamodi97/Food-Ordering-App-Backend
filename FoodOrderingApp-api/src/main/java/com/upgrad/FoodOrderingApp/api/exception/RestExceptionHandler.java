@@ -1,18 +1,7 @@
 package com.upgrad.FoodOrderingApp.api.exception;
 
 import com.upgrad.FoodOrderingApp.api.model.ErrorResponse;
-import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.AuthenticationFailedException;
-import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
-import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
-import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.PaymentMethodNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.SaveAddressException;
-import com.upgrad.FoodOrderingApp.service.exception.SignUpRestrictedException;
-import com.upgrad.FoodOrderingApp.service.exception.UpdateCustomerException;
+import com.upgrad.FoodOrderingApp.service.exception.*;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -26,9 +15,9 @@ public class RestExceptionHandler {
      * Exception handler for SignUpRestrictedException
      *
      * @param exception SignUpRestrictedException type object contains error code and error message.
-     * @param request The web request object gives access to all the request parameters.
+     * @param request   The web request object gives access to all the request parameters.
      * @return ResponseEntity<ErrorResponse> type object for displaying the error code and error
-     *     message along with HttpStatus as BAD_REQUEST.
+     * message along with HttpStatus as BAD_REQUEST.
      */
     @ExceptionHandler(SignUpRestrictedException.class)
     public ResponseEntity<ErrorResponse> signupRestrictedException(
@@ -42,10 +31,10 @@ public class RestExceptionHandler {
      * Exception handler for AuthenticationFailedException
      *
      * @param exception AuthenticationFailedException type object contains error code and error
-     *     message
-     * @param request The web request object gives access to all the request parameters
+     *                  message
+     * @param request   The web request object gives access to all the request parameters
      * @return ResponseEntity<ErrorResponse> type object displaying the error code and error message
-     *     along with HttpStatus as UNAUTHORIZED
+     * along with HttpStatus as UNAUTHORIZED
      */
     @ExceptionHandler(AuthenticationFailedException.class)
     public ResponseEntity<ErrorResponse> authenticationFailedException(
@@ -59,10 +48,10 @@ public class RestExceptionHandler {
      * Exception handler for AuthorizationFailedException.
      *
      * @param exception AuthorizationFailedException type object contains error code and error
-     *     message.
-     * @param request The web request object gives access to all the request parameters.
+     *                  message.
+     * @param request   The web request object gives access to all the request parameters.
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     with HttpStatus as FORBIDDEN.
+     * with HttpStatus as FORBIDDEN.
      */
     @ExceptionHandler(AuthorizationFailedException.class)
     public ResponseEntity<ErrorResponse> authorizationFailedException(
@@ -76,9 +65,9 @@ public class RestExceptionHandler {
      * Exception handler for UpdateCustomerException.
      *
      * @param exception UpdateCustomerException type object contains error code and error message.
-     * @param request The web request object gives access to all the request parameters.
+     * @param request   The web request object gives access to all the request parameters.
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     with HttpStatus as BAD_REQUEST.
+     * with HttpStatus as BAD_REQUEST.
      */
     @ExceptionHandler(UpdateCustomerException.class)
     public ResponseEntity<ErrorResponse> updateCustomerException(
@@ -92,9 +81,9 @@ public class RestExceptionHandler {
      * Exception handler for AddressNotFoundException.
      *
      * @param exception AddressNotFoundException type object contains error code and error message.
-     * @param request The web request object gives access to all the request parameters.
+     * @param request   The web request object gives access to all the request parameters.
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     with HttpStatus as NOT_FOUND.
+     * with HttpStatus as NOT_FOUND.
      */
     @ExceptionHandler(AddressNotFoundException.class)
     public ResponseEntity<ErrorResponse> addressNotFoundException(
@@ -108,7 +97,7 @@ public class RestExceptionHandler {
      * Exception handler for RestaurantNotFoundException
      *
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     with HttpStatus as NOT_FOUND.
+     * with HttpStatus as NOT_FOUND.
      */
     @ExceptionHandler(RestaurantNotFoundException.class)
     public ResponseEntity<ErrorResponse> restaurantNotFoundException(
@@ -122,7 +111,7 @@ public class RestExceptionHandler {
      * Exception handler for CouponNotFoundException
      *
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     with HttpStatus as NOT_FOUND.
+     * with HttpStatus as NOT_FOUND.
      */
     @ExceptionHandler(CouponNotFoundException.class)
     public ResponseEntity<ErrorResponse> couponNotFoundException(
@@ -137,7 +126,7 @@ public class RestExceptionHandler {
      * CouponNotFoundException >>>>>>> Closes #20 Order Controller - Save Order
      *
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     * with HttpStatus as BAD_REQUEST.
+     * * with HttpStatus as BAD_REQUEST.
      */
     @ExceptionHandler(SaveAddressException.class)
     public ResponseEntity<ErrorResponse> saveAddressException(
@@ -151,7 +140,7 @@ public class RestExceptionHandler {
      * Exception handler for PaymentMethodNotFoundException
      *
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     with HttpStatus as BAD_REQUEST.
+     * with HttpStatus as BAD_REQUEST.
      */
     @ExceptionHandler(PaymentMethodNotFoundException.class)
     public ResponseEntity<ErrorResponse> saveAddressException(
@@ -165,7 +154,7 @@ public class RestExceptionHandler {
      * Exception handler for ItemNotFoundException
      *
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     with HttpStatus as BAD_REQUEST.
+     * with HttpStatus as BAD_REQUEST.
      */
     @ExceptionHandler(ItemNotFoundException.class)
     public ResponseEntity<ErrorResponse> itemNotFoundException(
@@ -179,7 +168,7 @@ public class RestExceptionHandler {
      * Exception handler for CategoryNotFoundException
      *
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     * with HttpStatus as NOT_FOUND.
+     * * with HttpStatus as NOT_FOUND.
      */
     @ExceptionHandler(CategoryNotFoundException.class)
     public ResponseEntity<ErrorResponse> categoryNotFoundException(
@@ -193,7 +182,7 @@ public class RestExceptionHandler {
      * Exception handler for InvalidRatingException
      *
      * @return ResponseEntity<ErrorResponse> type object displaying error code and error message along
-     *     * with HttpStatus as BAD_REQUEST.
+     * * with HttpStatus as BAD_REQUEST.
      */
     @ExceptionHandler(InvalidRatingException.class)
     public ResponseEntity<ErrorResponse> invalidRatingExcpetion(

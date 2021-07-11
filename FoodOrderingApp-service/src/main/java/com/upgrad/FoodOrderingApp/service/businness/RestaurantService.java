@@ -1,6 +1,6 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
-import java.util.List;
+import com.upgrad.FoodOrderingApp.service.common.ApplicationUtil;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
 import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
@@ -11,10 +11,17 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.text.DecimalFormat;
+import java.util.List;
+
 @Service
 public class RestaurantService {
 
-    @Autowired private RestaurantDao restaurantDao;
+    @Autowired
+    private RestaurantDao restaurantDao;
+
+    @Autowired
+    ApplicationUtil applicationUtil;
 
     /**
      * This method gets the restaurant details.
@@ -64,7 +71,7 @@ public class RestaurantService {
      */
     public List<RestaurantEntity> restaurantByCategory(final String categoryUuid)
             throws CategoryNotFoundException {
-        if (categoryUuid == null) {
+        if (categoryUuid == null || categoryUuid.isEmpty()) {
             throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
         }
 
@@ -80,26 +87,30 @@ public class RestaurantService {
      * Updates the customer rating for a restaurant
      *
      * @param restaurantEntity Restaurant whose rating is to be done, customerRating as provided by
-     *     customer
+     *                         customer
      * @return RestaurantEntity
      */
     @Transactional(propagation = Propagation.REQUIRED)
-    public RestaurantEntity updateRestaurantRating(
-            final RestaurantEntity restaurantEntity, final Double customerRating)
-            throws InvalidRatingException {
-        if (Double.valueOf(customerRating) < 1 || Double.valueOf(customerRating) > 5) {
+    public RestaurantEntity updateRestaurantRating(RestaurantEntity restaurantEntity, Double customerRating) throws InvalidRatingException {
+        // validate the rating
+        if (!applicationUtil.validateCustomerRating(customerRating.toString())) {
             throw new InvalidRatingException("IRE-001", "Restaurant should be in the range of 1 to 5");
         }
+        // Finding the new Customer rating adn updating it.
+        DecimalFormat format = new DecimalFormat("##.0");
+        double restaurantRating = restaurantEntity.getCustomerRating();
+        Integer restaurantNoOfCustomerRated = restaurantEntity.getNumberCustomersRated();
+        restaurantEntity.setNumberCustomersRated(restaurantNoOfCustomerRated + 1);
 
-        Double currentRating = restaurantEntity.getCustomerRating();
-        Integer numberCustomersRated = restaurantEntity.getNumberCustomersRated();
+        //calculating the new customer rating
+        double newCustomerRating = (restaurantRating * (restaurantNoOfCustomerRated.doubleValue()) + customerRating) / restaurantEntity.getNumberCustomersRated();
 
-        Double newRating =
-                ((currentRating * numberCustomersRated) + currentRating) / (numberCustomersRated + 1);
+        restaurantEntity.setCustomerRating(Double.parseDouble(format.format(newCustomerRating)));
 
-        restaurantEntity.setCustomerRating(newRating);
-        restaurantEntity.setNumberCustomersRated(numberCustomersRated + 1);
+        //Updating the restaurant in the db using the method updateRestaurantRating of restaurantDao.
+        RestaurantEntity updatedRestaurantEntity = restaurantDao.updateRating(restaurantEntity);
 
-        return restaurantDao.updateRestaurantEntity(restaurantEntity);
+        return updatedRestaurantEntity;
+
     }
 }
