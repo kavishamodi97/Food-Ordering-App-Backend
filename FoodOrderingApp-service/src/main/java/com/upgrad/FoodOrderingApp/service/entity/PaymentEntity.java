@@ -5,14 +5,18 @@ import org.apache.commons.lang3.builder.HashCodeBuilder;
 import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-/**
- * Payment Entity representing the 'payment' table in the 'restaurantdb' database.
- */
 @Entity
 @Table(name = "payment")
 @NamedQueries({
@@ -38,8 +42,7 @@ public class PaymentEntity implements Serializable {
     @Size(max = 255)
     private String paymentName;
 
-    public PaymentEntity() {
-    }
+    public PaymentEntity() {}
 
     public PaymentEntity(
             @NotNull @Size(max = 200) String uuid, @NotNull @Size(max = 255) String paymentName) {

@@ -9,16 +9,18 @@ import org.hibernate.annotations.OnDeleteAction;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
+
 import java.io.Serializable;
 
-/**
- * Customer Address Entity representing the 'customer_address' table in the 'restaurantdb' database.
- */
 @Entity
 @Table(name = "customer_address")
 @NamedQueries({
-        @NamedQuery(name = "getCustomerAddressByCustomer", query = "select a from CustomerAddressEntity a where a.customer = :customer"),
-        @NamedQuery(name = "getCustomerAddressByAddress", query = "select a from CustomerAddressEntity a where a.address=:address")
+        @NamedQuery(
+                name = "customerAddressByCustomer",
+                query = "select ca FROM CustomerAddressEntity ca where ca.customer = :customer"),
+        @NamedQuery(
+                name = "customerAddressByAddress",
+                query = "select ca from CustomerAddressEntity ca where ca.address = :address")
 })
 public class CustomerAddressEntity implements Serializable {
 
@@ -38,9 +40,6 @@ public class CustomerAddressEntity implements Serializable {
     @OnDelete(action = OnDeleteAction.CASCADE)
     @JoinColumn(name = "address_id")
     private AddressEntity address;
-
-    public CustomerAddressEntity() {
-    }
 
     public Integer getId() {
         return id;

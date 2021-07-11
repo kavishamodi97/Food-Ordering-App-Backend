@@ -7,64 +7,48 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-/**
- * This class provide the necessary methods to access the CustomerEntity
- */
+/** This class provides the database access for all the endpoints in the customer controller. */
 @Repository
 public class CustomerDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     /**
-     * Save a Customer Details in the Database
+     * This method saves the details of the new customer in database.
      *
-     * @param customerEntity Customer Details to be Saved
-     * @return Saved Customer Details
+     * @param customerEntity for creating new customer.
+     * @return CustomerEntity object.
      */
-    public CustomerEntity createCustomer(CustomerEntity customerEntity) {
+    public CustomerEntity saveCustomer(final CustomerEntity customerEntity) {
         entityManager.persist(customerEntity);
         return customerEntity;
     }
 
     /**
-     * Update the Customer Details
+     * This method helps finds the customer by using contact number.
      *
-     * @param customerToBeUpdated Customer Details to be Updated
-     * @return Updated Customer Details
+     * @param contactNumber to find the customer is already registered with this number
+     * @return CustomerEntity if the contact number exists in the database
      */
-    public CustomerEntity updateCustomer(CustomerEntity customerToBeUpdated) {
-        entityManager.merge(customerToBeUpdated);
-        return customerToBeUpdated;
-    }
-
-    /**
-     * Get the Customer Details based on the UUID
-     *
-     * @param uuid UUID of the Customer
-     * @return Customer details matching the UUID or NULL
-     */
-    public CustomerEntity getCustomerByUuid(final String uuid) {
+    public CustomerEntity getCustomerByContactNumber(final String contactNumber) {
         try {
-            CustomerEntity customer = entityManager.createNamedQuery("customerByUuid", CustomerEntity.class).setParameter("uuid", uuid).getSingleResult();
-            return customer;
+            return entityManager
+                    .createNamedQuery("customerByContactNumber", CustomerEntity.class)
+                    .setParameter("contactNumber", contactNumber)
+                    .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
     }
 
     /**
-     * Get the Customer Details based on the Contact Number
+     * This method updates the customer details in the database.
      *
-     * @param contact_number Contact Number of the Customer
-     * @return Customer details matching the Contact Number or NULL
+     * @param customerEntity CustomerEntity object to update.
+     * @return Updated CustomerEntity object.
      */
-    public CustomerEntity getCustomerByContactNumber(final String contact_number) {
-        try {
-            CustomerEntity customer = entityManager.createNamedQuery("customerByContactNumber", CustomerEntity.class).setParameter("contact_number", contact_number).getSingleResult();
-            return customer;
-        } catch (NoResultException nre) {
-            return null;
-        }
+    public CustomerEntity updateCustomer(final CustomerEntity customerEntity) {
+        entityManager.merge(customerEntity);
+        return customerEntity;
     }
 }

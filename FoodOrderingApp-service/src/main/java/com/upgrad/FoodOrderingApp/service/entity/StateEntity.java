@@ -6,24 +6,24 @@ import org.apache.commons.lang3.builder.ToStringBuilder;
 import org.apache.commons.lang3.builder.ToStringStyle;
 
 import javax.persistence.*;
+
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
 
-/**
- * State Entity representing the 'state' table in the 'restaurantdb' database.
- */
 @Entity
 @Table(name = "state")
 @NamedQueries({
-        @NamedQuery(name = "StateByUuid", query = "select s from StateEntity s where s.uuid = :uuid"),
-        @NamedQuery(name = "getAllStates", query = "select  s from StateEntity  s")
+        @NamedQuery(
+                name = "getStateByUuid",
+                query = "select s from StateEntity s where s.uuid=:stateUuid"),
+        @NamedQuery(name = "getAllStates", query = "select s from StateEntity s")
 })
 public class StateEntity implements Serializable {
 
     @Id
-    @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
     private Integer id;
 
     @Size(max = 200)
@@ -31,14 +31,14 @@ public class StateEntity implements Serializable {
     @Column(name = "uuid", unique = true)
     private String uuid;
 
-    @Column(name = "state_name")
     @Size(max = 30)
+    @Column(name = "state_name")
     private String stateName;
 
-    public StateEntity() {
-    }
+    public StateEntity() {}
 
-    public StateEntity(String uuid, String stateName) {
+    public StateEntity(
+            @NotNull @Size(max = 200) String uuid, @NotNull @Size(max = 30) String stateName) {
         this.uuid = uuid;
         this.stateName = stateName;
     }
@@ -82,5 +82,3 @@ public class StateEntity implements Serializable {
         return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
-
-

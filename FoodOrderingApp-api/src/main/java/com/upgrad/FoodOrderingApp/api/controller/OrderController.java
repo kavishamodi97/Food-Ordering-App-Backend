@@ -1,85 +1,53 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
-import com.upgrad.FoodOrderingApp.api.model.CouponDetailsResponse;
-import com.upgrad.FoodOrderingApp.api.model.CustomerOrderResponse;
-import com.upgrad.FoodOrderingApp.api.model.ItemQuantity;
-import com.upgrad.FoodOrderingApp.api.model.ItemQuantityResponse;
-import com.upgrad.FoodOrderingApp.api.model.ItemQuantityResponseItem;
-import com.upgrad.FoodOrderingApp.api.model.OrderList;
-import com.upgrad.FoodOrderingApp.api.model.OrderListAddress;
-import com.upgrad.FoodOrderingApp.api.model.OrderListAddressState;
-import com.upgrad.FoodOrderingApp.api.model.OrderListCoupon;
-import com.upgrad.FoodOrderingApp.api.model.OrderListCustomer;
-import com.upgrad.FoodOrderingApp.api.model.OrderListPayment;
-import com.upgrad.FoodOrderingApp.api.model.SaveOrderRequest;
-import com.upgrad.FoodOrderingApp.api.model.SaveOrderResponse;
-import com.upgrad.FoodOrderingApp.service.businness.AddressService;
-import com.upgrad.FoodOrderingApp.service.businness.CustomerService;
-import com.upgrad.FoodOrderingApp.service.businness.ItemService;
-import com.upgrad.FoodOrderingApp.service.businness.OrderService;
-import com.upgrad.FoodOrderingApp.service.businness.PaymentService;
-import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
-import com.upgrad.FoodOrderingApp.service.common.UtilityProvider;
-import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CouponEntity;
-import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
-import com.upgrad.FoodOrderingApp.service.entity.ItemEntity;
-import com.upgrad.FoodOrderingApp.service.entity.OrderEntity;
-import com.upgrad.FoodOrderingApp.service.entity.OrderItemEntity;
-import com.upgrad.FoodOrderingApp.service.entity.PaymentEntity;
-import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
-import com.upgrad.FoodOrderingApp.service.exception.AddressNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
-import com.upgrad.FoodOrderingApp.service.exception.CouponNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.ItemNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.PaymentMethodNotFoundException;
-import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
+import com.upgrad.FoodOrderingApp.api.common.Utility;
+import com.upgrad.FoodOrderingApp.api.model.*;
+import com.upgrad.FoodOrderingApp.service.businness.*;
+import com.upgrad.FoodOrderingApp.service.entity.*;
+import com.upgrad.FoodOrderingApp.service.exception.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.math.BigDecimal;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Random;
 import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
 public class OrderController {
 
-    @Autowired private OrderService orderService;
+    @Autowired
+    private OrderService orderService;
 
-    @Autowired private CustomerService customerService;
+    @Autowired
+    private CustomerService customerService;
 
-    @Autowired private AddressService addressService;
+    @Autowired
+    private AddressService addressService;
 
-    @Autowired private PaymentService paymentService;
+    @Autowired
+    private PaymentService paymentService;
 
-    @Autowired private RestaurantService restaurantService;
+    @Autowired
+    private RestaurantService restaurantService;
 
-    @Autowired private ItemService itemService;
-
-    @Autowired private UtilityProvider utilityProvider;
+    @Autowired
+    private ItemService itemService;
 
     /**
      * This API endpoint gets coupon details by coupon name
      *
      * @param authorization Bearer <access-token>
-     * @param couponName Name of the coupon whose details are required.
+     * @param couponName    Name of the coupon whose details are required.
      * @return CouponDetailsResponse
      * @throws AuthorizationFailedException If authorization is not valid.
-     * @throws CouponNotFoundException If coupon name doesn't exist in database
+     * @throws CouponNotFoundException      If coupon name doesn't exist in database
      */
     @CrossOrigin
     @RequestMapping(
@@ -91,7 +59,7 @@ public class OrderController {
             @PathVariable("coupon_name") final String couponName)
             throws AuthorizationFailedException, CouponNotFoundException {
 
-        String accessToken = utilityProvider.getAccessTokenFromAuthorization(authorization);
+        String accessToken = Utility.getTokenFromAuthorization(authorization);
 
         customerService.getCustomer(accessToken);
 
@@ -121,7 +89,7 @@ public class OrderController {
             @RequestHeader("authorization") final String authorization)
             throws AuthorizationFailedException {
 
-        String accessToken = utilityProvider.getAccessTokenFromAuthorization(authorization);
+        String accessToken = Utility.getTokenFromAuthorization(authorization);
 
         // Identify customer from the access token.
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
@@ -154,15 +122,15 @@ public class OrderController {
     /**
      * To save the customer order if it is valid.
      *
-     * @param authorization Bearer <access-token>
+     * @param authorization    Bearer <access-token>
      * @param saveOrderRequest Contains the order details.
      * @return SaveOrderResponse
-     * @throws AuthorizationFailedException If authorization is not valid.
-     * @throws CouponNotFoundException if the coupon id entered is not valid.
-     * @throws AddressNotFoundException if the address id entered doesn't belong to customer.
+     * @throws AuthorizationFailedException   If authorization is not valid.
+     * @throws CouponNotFoundException        if the coupon id entered is not valid.
+     * @throws AddressNotFoundException       if the address id entered doesn't belong to customer.
      * @throws PaymentMethodNotFoundException if the payment id entered isn't available in db.
-     * @throws RestaurantNotFoundException if the restaurant id entered isn't available in db.
-     * @throws ItemNotFoundException if the item id entered isn't available in db.
+     * @throws RestaurantNotFoundException    if the restaurant id entered isn't available in db.
+     * @throws ItemNotFoundException          if the item id entered isn't available in db.
      */
     @CrossOrigin
     @RequestMapping(
@@ -174,7 +142,7 @@ public class OrderController {
             @RequestBody(required = true) SaveOrderRequest saveOrderRequest)
             throws AuthorizationFailedException, CouponNotFoundException, AddressNotFoundException,
             PaymentMethodNotFoundException, RestaurantNotFoundException, ItemNotFoundException {
-        String accessToken = utilityProvider.getAccessTokenFromAuthorization(authorization);
+        String accessToken = Utility.getTokenFromAuthorization(authorization);
 
         // Identify customer from the access token.
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
@@ -189,7 +157,7 @@ public class OrderController {
                 addressService.getAddressByUUID(saveOrderRequest.getAddressId(), customerEntity);
 
         RestaurantEntity restaurantEntity =
-                restaurantService.getRestaurantByUuid(saveOrderRequest.getRestaurantId().toString());
+                restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
 
         List<OrderItemEntity> orderItemEntities = new ArrayList<>();
 
@@ -235,7 +203,7 @@ public class OrderController {
         orderListCustomer.setId(UUID.fromString(customer.getUuid()));
         orderListCustomer.setFirstName(customer.getFirstName());
         orderListCustomer.setLastName(customer.getLastName());
-        orderListCustomer.setEmailAddress(customer.getEmail());
+        orderListCustomer.setEmailAddress(customer.getEmailAddress());
         orderListCustomer.setContactNumber(customer.getContactNumber());
         return orderListCustomer;
     }

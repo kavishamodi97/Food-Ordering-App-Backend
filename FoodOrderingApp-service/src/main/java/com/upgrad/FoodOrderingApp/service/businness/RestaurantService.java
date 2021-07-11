@@ -1,10 +1,7 @@
 package com.upgrad.FoodOrderingApp.service.businness;
 
-import com.upgrad.FoodOrderingApp.service.dao.AddressDao;
-import com.upgrad.FoodOrderingApp.service.dao.RestaurantCategoryDao;
 import com.upgrad.FoodOrderingApp.service.dao.RestaurantDao;
-import com.upgrad.FoodOrderingApp.service.entity.*;
-import com.upgrad.FoodOrderingApp.service.exception.AuthorizationFailedException;
+import com.upgrad.FoodOrderingApp.service.entity.RestaurantEntity;
 import com.upgrad.FoodOrderingApp.service.exception.CategoryNotFoundException;
 import com.upgrad.FoodOrderingApp.service.exception.InvalidRatingException;
 import com.upgrad.FoodOrderingApp.service.exception.RestaurantNotFoundException;
@@ -13,9 +10,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -24,82 +18,90 @@ public class RestaurantService {
     @Autowired
     private RestaurantDao restaurantDao;
 
-    @Autowired
-    private AddressDao addressDao;
-
-    @Autowired
-    private RestaurantCategoryDao restaurantCategoryDao;
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public List<RestaurantEntity> getAllRestaurants(){
-        return restaurantDao.getAllRestaurants();
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public AddressEntity getRestaurantAddress(Integer restaurantId) {
-
-        return addressDao.getAddressByRestaurantId(restaurantId);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public List<RestaurantEntity> getAllRestaurantsByName(String restaurantName) {
-        return restaurantDao.getAllRestaurantsByName(restaurantName);
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public RestaurantEntity getRestaurantByUuid(String restaurantUuid) throws RestaurantNotFoundException {
-        if(restaurantUuid.isEmpty())
-            throw new RestaurantNotFoundException("RNF-002","Restaurant id field should not be empty");
-        RestaurantEntity restaurantEntity = restaurantDao.getRestaurantByUuid(restaurantUuid);
-        if(restaurantEntity==null)
-            throw new RestaurantNotFoundException("RNF-001","No restaurant by this id");
-        return restaurantEntity;
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public List<RestaurantCategoryEntity> getCategories(RestaurantEntity restaurantEntity) {
-       return restaurantCategoryDao.getRestaurantCategories(restaurantEntity.getId());
-    }
-
-    @Transactional(propagation = Propagation.REQUIRED)
-    public List<RestaurantEntity> getRestaurantByCategory(String categoryId) throws CategoryNotFoundException {
-        if(categoryId.isEmpty())
-            throw new CategoryNotFoundException("CNF-001","Category id field should not be empty");
-        List<RestaurantCategoryEntity> restaurantCategoryEntities = restaurantCategoryDao.getRestaurantByCategoryUuid(categoryId);
-        if(restaurantCategoryEntities.size()==0)
-            throw new CategoryNotFoundException("CNF-002","No category by this id");
-        List<RestaurantEntity> restaurantEntities = new ArrayList<>();
-        for(int i=0;i<restaurantCategoryEntities.size();i++){
-            restaurantEntities.add(restaurantCategoryEntities.get(i).getRestaurantEntity());
+    /**
+     * This method gets the restaurant details.
+     *
+     * @param uuid UUID of the restaurant.
+     * @return
+     * @throws RestaurantNotFoundException if restaurant with UUID doesn't exist in the database.
+     */
+    public RestaurantEntity restaurantByUUID(String uuid) throws RestaurantNotFoundException {
+        RestaurantEntity restaurant = restaurantDao.restaurantByUUID(uuid);
+        if (restaurant == null) {
+            throw new RestaurantNotFoundException("RNF-001", "No restaurant by this id");
         }
+        return restaurant;
+    }
+
+    /**
+     * Gets all the restaurants in DB.
+     *
+     * @return List of RestaurantEntity
+     */
+    public List<RestaurantEntity> restaurantsByRating() {
+
+        return restaurantDao.restaurantsByRating();
+    }
+
+    /**
+     * Gets restaurants in DB based on search string.
+     *
+     * @return List of RestaurantEntity
+     */
+    public List<RestaurantEntity> restaurantsByName(final String search)
+            throws RestaurantNotFoundException {
+        if (search == null || search.isEmpty()) {
+            throw new RestaurantNotFoundException("RNF-003", "Restaurant name field should not be empty");
+        }
+
+        List<RestaurantEntity> relevantRestaurantEntities = restaurantDao.restaurantsByName(search);
+
+        return relevantRestaurantEntities;
+    }
+
+    /**
+     * Gets all the restaurants in DB based on Category Uuid
+     *
+     * @return List of RestaurantEntity
+     */
+    public List<RestaurantEntity> restaurantByCategory(final String categoryUuid)
+            throws CategoryNotFoundException {
+        if (categoryUuid == null) {
+            throw new CategoryNotFoundException("CNF-001", "Category id field should not be empty");
+        }
+
+        List<RestaurantEntity> restaurantEntities = restaurantDao.restaurantByCategory(categoryUuid);
+        if (restaurantEntities == null) {
+            throw new CategoryNotFoundException("CNF-002", "No category by this id");
+        }
+
         return restaurantEntities;
     }
 
+    /**
+     * Updates the customer rating for a restaurant
+     *
+     * @param restaurantEntity Restaurant whose rating is to be done, customerRating as provided by
+     *                         customer
+     * @return RestaurantEntity
+     */
     @Transactional(propagation = Propagation.REQUIRED)
-    public RestaurantEntity editRestaurantEntity(String restaurantUuid,
-                                                 Double customerRating,
-                                                 String accessToken)
-            throws AuthorizationFailedException, InvalidRatingException, RestaurantNotFoundException {
+    public RestaurantEntity updateRestaurantRating(
+            final RestaurantEntity restaurantEntity, final Double customerRating)
+            throws InvalidRatingException {
+        if (Double.valueOf(customerRating) < 1 || Double.valueOf(customerRating) > 5) {
+            throw new InvalidRatingException("IRE-001", "Restaurant should be in the range of 1 to 5");
+        }
 
-//        CustomerService customerService = new CustomerService();
-//        CustomerEntity customerEntity = customerService.getCustomer(accessToken);
+        Double currentRating = restaurantEntity.getCustomerRating();
+        Integer numberCustomersRated = restaurantEntity.getNumberCustomersRated();
 
-        RestaurantEntity restaurantEntity = this.getRestaurantByUuid(restaurantUuid);
+        Double newRating =
+                ((currentRating * numberCustomersRated) + currentRating) / (numberCustomersRated + 1);
 
-        if(customerRating<1 || customerRating>5)
-            throw new InvalidRatingException("IRE-001","Restaurant should be in the range of 1 to 5");
+        restaurantEntity.setCustomerRating(newRating);
+        restaurantEntity.setNumberCustomersRated(numberCustomersRated + 1);
 
-        Double noOfCustomerRated = restaurantEntity.getNoOfCustomerRated().doubleValue();
-        Double restaurantRating =  restaurantEntity.getCustomerRating().doubleValue();
-        restaurantRating=restaurantRating*noOfCustomerRated;
-        noOfCustomerRated = noOfCustomerRated+1;
-        restaurantRating = (restaurantRating+customerRating) / noOfCustomerRated ;
-        restaurantEntity.setNoOfCustomerRated(noOfCustomerRated.intValue());
-
-        restaurantEntity.setCustomerRating(BigDecimal.valueOf(restaurantRating).setScale(2,RoundingMode.HALF_UP));
-
-        return restaurantDao.editRestaurant(restaurantEntity);
-
-
+        return restaurantDao.updateRestaurantEntity(restaurantEntity);
     }
 }
