@@ -189,7 +189,7 @@ public class OrderController {
                 addressService.getAddressByUUID(saveOrderRequest.getAddressId(), customerEntity);
 
         RestaurantEntity restaurantEntity =
-                restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
+                restaurantService.getRestaurantByUuid(saveOrderRequest.getRestaurantId().toString());
 
         List<OrderItemEntity> orderItemEntities = new ArrayList<>();
 
@@ -235,7 +235,7 @@ public class OrderController {
         orderListCustomer.setId(UUID.fromString(customer.getUuid()));
         orderListCustomer.setFirstName(customer.getFirstName());
         orderListCustomer.setLastName(customer.getLastName());
-        orderListCustomer.setEmailAddress(customer.getEmailAddress());
+        orderListCustomer.setEmailAddress(customer.getEmail());
         orderListCustomer.setContactNumber(customer.getContactNumber());
         return orderListCustomer;
     }
