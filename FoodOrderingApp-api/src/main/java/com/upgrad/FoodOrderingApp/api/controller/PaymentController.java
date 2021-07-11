@@ -20,8 +20,7 @@ import java.util.UUID;
 @RequestMapping("/")
 public class PaymentController {
 
-    @Autowired
-    PaymentService paymentService;
+    @Autowired PaymentService paymentService;
 
     /**
      * This API endpoint gets all the payment methods
@@ -34,9 +33,9 @@ public class PaymentController {
             path = "/payment",
             produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
     public ResponseEntity<PaymentListResponse> getAllPaymentMethods() {
-        List<PaymentEntity> paymentMethods = paymentService.getAllPaymentMethods();
+        List<PaymentEntity> paymentMathods = paymentService.getAllPaymentMethods();
         PaymentListResponse paymentListResponse = new PaymentListResponse();
-        for (PaymentEntity paymentMethod : paymentMethods) {
+        for (PaymentEntity paymentMethod : paymentMathods) {
             PaymentResponse paymentResponse = new PaymentResponse();
             paymentResponse.setId(UUID.fromString(paymentMethod.getUuid()));
             paymentResponse.setPaymentName(paymentMethod.getPaymentName());

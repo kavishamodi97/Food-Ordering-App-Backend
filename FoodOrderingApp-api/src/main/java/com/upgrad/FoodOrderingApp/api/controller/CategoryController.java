@@ -1,8 +1,5 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
 import com.upgrad.FoodOrderingApp.api.model.CategoriesListResponse;
 import com.upgrad.FoodOrderingApp.api.model.CategoryDetailsResponse;
 import com.upgrad.FoodOrderingApp.api.model.CategoryListResponse;
@@ -15,17 +12,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/")
 public class CategoryController {
 
-    @Autowired private CategoryService categoryService;
+    @Autowired
+    private CategoryService categoryService;
 
     /**
      * This API endpoint gets list of all categories
@@ -64,7 +62,7 @@ public class CategoryController {
      * @param categoryUuid UUID of the category for which the detail is required.
      * @return CategoryDetailsResponse
      * @throws CategoryNotFoundException If the category with the given UUID doesn't exist in the
-     *     database.
+     *                                   database.
      */
     @CrossOrigin
     @RequestMapping(

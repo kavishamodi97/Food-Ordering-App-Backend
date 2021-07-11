@@ -17,8 +17,7 @@ import java.util.List;
 @Repository
 public class AddressDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     /**
      * Creates the address entity using the given AddressEntity.
@@ -48,7 +47,6 @@ public class AddressDao {
         }
         return addresses;
     }
-
     /*
      * This method fetches the address from Database based on address UUID.
      *
