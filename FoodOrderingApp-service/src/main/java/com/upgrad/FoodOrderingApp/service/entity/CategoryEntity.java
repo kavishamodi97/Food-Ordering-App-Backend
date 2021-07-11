@@ -10,14 +10,14 @@ import java.util.List;
 @NamedQueries({
         @NamedQuery(
                 name = "categoryByUuid",
-                query = "select c from CategoryEntity c where c.uuid=:uuid order by categoryName"),
+                query = "select c from CategoryEntity c where c.uuid=:uuid order by c.categoryName"),
         @NamedQuery(
                 name = "getAllCategoriesOrderedByName",
-                query = "select c from CategoryEntity c order by categoryName asc"),
+                query = "select c from CategoryEntity c order by c.categoryName asc"),
         @NamedQuery(
                 name = "getCategoriesByRestaurant",
                 query =
-                        "Select c from CategoryEntity c where id in (select rc.categoryId from RestaurantCategoryEntity rc where rc.restaurantId = "
+                        "Select c from CategoryEntity c where c.id in (select rc.category_id from RestaurantCategoryEntity rc where rc.restaurant_id = "
                                 + "(select r.id from RestaurantEntity r where "
                                 + " r.uuid=:restaurantUuid) )  order by c.categoryName")
 })
