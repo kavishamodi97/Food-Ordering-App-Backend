@@ -1,11 +1,27 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.util.Objects;
+import java.util.List;
 
 @Entity
 @Table(name="category")
-public class CategoryEntity {
+@NamedQueries({
+        @NamedQuery(
+                name = "categoryByUuid",
+                query = "select c from CategoryEntity c where c.uuid=:uuid order by c.categoryName"),
+        @NamedQuery(
+                name = "getAllCategoriesOrderedByName",
+                query = "select c from CategoryEntity c order by c.categoryName asc"),
+        @NamedQuery(
+                name = "getCategoriesByRestaurant",
+                query =
+                        "Select c from CategoryEntity c where c.id in (select rc.category_id from RestaurantCategoryEntity rc where rc.restaurant_id = "
+                                + "(select r.id from RestaurantEntity r where "
+                                + " r.uuid=:restaurantUuid) )  order by c.categoryName")
+})
+public class CategoryEntity  implements Serializable {
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,6 +32,15 @@ public class CategoryEntity {
 
     @Column(name="category_name")
     private String categoryName;
+
+    @ManyToMany(
+            fetch = FetchType.LAZY,
+            cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @JoinTable(
+            name = "category_item",
+            joinColumns = @JoinColumn(name = "category_id"),
+            inverseJoinColumns = @JoinColumn(name = "item_id"))
+    private List<ItemEntity> items;
 
     public Integer getId() {
         return id;
@@ -39,6 +64,13 @@ public class CategoryEntity {
 
     public void setCategoryName(String categoryName) {
         this.categoryName = categoryName;
+    }
+    public List<ItemEntity> getItems() {
+        return items;
+    }
+
+    public void setItems(List<ItemEntity> items) {
+        this.items = items;
     }
 
     @Override
