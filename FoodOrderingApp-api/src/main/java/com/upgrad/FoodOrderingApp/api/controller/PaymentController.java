@@ -20,27 +20,27 @@ import java.util.UUID;
 @RequestMapping("/")
 public class PaymentController {
 
-    @Autowired
-    private PaymentService paymentService;
+    @Autowired PaymentService paymentService;
 
     /**
-     * This endpoint is used to get all the payment methods
+     * This API endpoint gets all the payment methods
      *
      * @return Payment methods
      */
     @CrossOrigin
-    @RequestMapping(path = "payment", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-    public ResponseEntity<PaymentListResponse> getPaymentMethods() {
-
-        List<PaymentEntity> getPaymentMethods = paymentService.getPaymentMethods();
+    @RequestMapping(
+            method = RequestMethod.GET,
+            path = "/payment",
+            produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
+    public ResponseEntity<PaymentListResponse> getAllPaymentMethods() {
+        List<PaymentEntity> paymentMathods = paymentService.getAllPaymentMethods();
         PaymentListResponse paymentListResponse = new PaymentListResponse();
-
-        for (PaymentEntity paymentEntity : getPaymentMethods) {
+        for (PaymentEntity paymentMethod : paymentMathods) {
             PaymentResponse paymentResponse = new PaymentResponse();
-            paymentResponse.setId(UUID.fromString(paymentEntity.getUuid()));
-            paymentResponse.setPaymentName(paymentEntity.getPaymentName());
+            paymentResponse.setId(UUID.fromString(paymentMethod.getUuid()));
+            paymentResponse.setPaymentName(paymentMethod.getPaymentName());
             paymentListResponse.addPaymentMethodsItem(paymentResponse);
         }
-        return new ResponseEntity<PaymentListResponse>(paymentListResponse, HttpStatus.OK);
+        return new ResponseEntity<>(paymentListResponse, HttpStatus.OK);
     }
 }

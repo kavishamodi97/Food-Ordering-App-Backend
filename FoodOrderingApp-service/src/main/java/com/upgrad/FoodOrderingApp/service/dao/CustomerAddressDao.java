@@ -15,8 +15,7 @@ import javax.persistence.PersistenceContext;
 @Repository
 public class CustomerAddressDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     /**
      * Creates mapping between the customer and the address entity.
@@ -24,21 +23,22 @@ public class CustomerAddressDao {
      * @param customerAddressEntity Customer and the address to map.
      * @return CustomerAddressEntity object.
      */
-    public CustomerAddressEntity createCustomerAddress(final CustomerAddressEntity customerAddressEntity) {
+    public void createCustomerAddress(final CustomerAddressEntity customerAddressEntity) {
         entityManager.persist(customerAddressEntity);
-        return customerAddressEntity;
     }
 
     /**
-     * fetches the address of a customer using given address.
+     * fetches the address of a customer using givne address.
      *
      * @param address address to fetch.
      * @return CustomerAddressEntity type object.
      */
     public CustomerAddressEntity customerAddressByAddress(final AddressEntity address) {
         try {
-
-            return entityManager.createNamedQuery("getCustomerAddressByAddress", CustomerAddressEntity.class).setParameter("address", address).getSingleResult();
+            return entityManager
+                    .createNamedQuery("customerAddressByAddress", CustomerAddressEntity.class)
+                    .setParameter("address", address)
+                    .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }

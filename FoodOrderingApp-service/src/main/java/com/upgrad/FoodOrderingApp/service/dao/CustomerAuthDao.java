@@ -7,49 +7,49 @@ import javax.persistence.EntityManager;
 import javax.persistence.NoResultException;
 import javax.persistence.PersistenceContext;
 
-/**
- * This class provide the necessary methods to access the CustomerAuthEntity
- */
 @Repository
 public class CustomerAuthDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     /**
-     * Save a Customer Auth Details in the Database
+     * This method stores authorization access token in the database
      *
-     * @param customerAuthEntity Customer Auth Details to be Saved
-     * @return Saved Customer Auth Details
+     * @param customerAuthEntity the CustomerAuthEntity object from which new authorization will be
+     *     created
      */
-    public CustomerAuthEntity createCustomerAuth(CustomerAuthEntity customerAuthEntity) {
+    public void createCustomerAuthToken(CustomerAuthEntity customerAuthEntity) {
         entityManager.persist(customerAuthEntity);
-        return customerAuthEntity;
     }
 
     /**
-     * Update a Customer Auth Details in the Database
      *
-     * @param customerAuthEntity Customer Auth Details to be Updated
-     * @return Updated Customer Auth Details
+     * @param accessToken access-token obtained during successful login.
+     * @return CustomerAuthEntity or null of token not found in database. This method helps to find
+     *     the customer using the access token. ======= This method helps to find the customer using
+     *     the access token.
+     *     <p>>>>>>>> Closes #8 added code for /address/{address_id} end point api to delete the
+     *     address of a customer if no orders placed using the given address
+     * @param accessToken the access token which will be searched in database to find the customer.
+     * @return CustomerAuthEntity object if given access token exists in the database.
      */
-    public CustomerAuthEntity customerLogout(CustomerAuthEntity customerAuthEntity) {
-        entityManager.merge(customerAuthEntity);
-        return customerAuthEntity;
-    }
-
-    /**
-     * Get the Customer Auth Details based on the AccessToken
-     *
-     * @param accessToken AccessToken
-     * @return Customer Auth details matching the AccessToken or NULL
-     */
-    public CustomerAuthEntity getCustomerAuthByAccessToken(String accessToken) {
+    public CustomerAuthEntity getCustomerAuthByToken(final String accessToken) {
         try {
-            CustomerAuthEntity customerAuthEntity = entityManager.createNamedQuery("getCustomerAuthByAccessToken", CustomerAuthEntity.class).setParameter("access_Token", accessToken).getSingleResult();
-            return customerAuthEntity;
+            return entityManager
+                    .createNamedQuery("customerAuthByToken", CustomerAuthEntity.class)
+                    .setParameter("accessToken", accessToken)
+                    .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
+    }
+
+    /**
+     * This method updates the customers logout time in the database.
+     *
+     * @param updatedCustomerAuthEntity CustomerAuthEntity object to update.
+     */
+    public void updateCustomerAuth(final CustomerAuthEntity updatedCustomerAuthEntity) {
+        entityManager.merge(updatedCustomerAuthEntity);
     }
 }

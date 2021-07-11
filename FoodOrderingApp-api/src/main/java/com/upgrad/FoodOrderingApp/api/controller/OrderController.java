@@ -1,5 +1,6 @@
 package com.upgrad.FoodOrderingApp.api.controller;
 
+import com.upgrad.FoodOrderingApp.api.common.Utility;
 import com.upgrad.FoodOrderingApp.api.model.CouponDetailsResponse;
 import com.upgrad.FoodOrderingApp.api.model.CustomerOrderResponse;
 import com.upgrad.FoodOrderingApp.api.model.ItemQuantity;
@@ -19,7 +20,6 @@ import com.upgrad.FoodOrderingApp.service.businness.ItemService;
 import com.upgrad.FoodOrderingApp.service.businness.OrderService;
 import com.upgrad.FoodOrderingApp.service.businness.PaymentService;
 import com.upgrad.FoodOrderingApp.service.businness.RestaurantService;
-import com.upgrad.FoodOrderingApp.service.common.UtilityProvider;
 import com.upgrad.FoodOrderingApp.service.entity.AddressEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CouponEntity;
 import com.upgrad.FoodOrderingApp.service.entity.CustomerEntity;
@@ -70,8 +70,6 @@ public class OrderController {
 
     @Autowired private ItemService itemService;
 
-    @Autowired private UtilityProvider utilityProvider;
-
     /**
      * This API endpoint gets coupon details by coupon name
      *
@@ -91,7 +89,7 @@ public class OrderController {
             @PathVariable("coupon_name") final String couponName)
             throws AuthorizationFailedException, CouponNotFoundException {
 
-        String accessToken = utilityProvider.getAccessTokenFromAuthorization(authorization);
+        String accessToken = Utility.getTokenFromAuthorization(authorization);
 
         customerService.getCustomer(accessToken);
 
@@ -121,7 +119,7 @@ public class OrderController {
             @RequestHeader("authorization") final String authorization)
             throws AuthorizationFailedException {
 
-        String accessToken = utilityProvider.getAccessTokenFromAuthorization(authorization);
+        String accessToken = Utility.getTokenFromAuthorization(authorization);
 
         // Identify customer from the access token.
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
@@ -174,7 +172,7 @@ public class OrderController {
             @RequestBody(required = true) SaveOrderRequest saveOrderRequest)
             throws AuthorizationFailedException, CouponNotFoundException, AddressNotFoundException,
             PaymentMethodNotFoundException, RestaurantNotFoundException, ItemNotFoundException {
-        String accessToken = utilityProvider.getAccessTokenFromAuthorization(authorization);
+        String accessToken = Utility.getTokenFromAuthorization(authorization);
 
         // Identify customer from the access token.
         CustomerEntity customerEntity = customerService.getCustomer(accessToken);
@@ -189,7 +187,7 @@ public class OrderController {
                 addressService.getAddressByUUID(saveOrderRequest.getAddressId(), customerEntity);
 
         RestaurantEntity restaurantEntity =
-                restaurantService.getRestaurantByUuid(saveOrderRequest.getRestaurantId().toString());
+                restaurantService.restaurantByUUID(saveOrderRequest.getRestaurantId().toString());
 
         List<OrderItemEntity> orderItemEntities = new ArrayList<>();
 
@@ -235,7 +233,7 @@ public class OrderController {
         orderListCustomer.setId(UUID.fromString(customer.getUuid()));
         orderListCustomer.setFirstName(customer.getFirstName());
         orderListCustomer.setLastName(customer.getLastName());
-        orderListCustomer.setEmailAddress(customer.getEmail());
+        orderListCustomer.setEmailAddress(customer.getEmailAddress());
         orderListCustomer.setContactNumber(customer.getContactNumber());
         return orderListCustomer;
     }

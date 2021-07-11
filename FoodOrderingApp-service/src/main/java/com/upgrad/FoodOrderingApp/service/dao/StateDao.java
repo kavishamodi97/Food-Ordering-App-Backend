@@ -15,18 +15,20 @@ import java.util.List;
 @Repository
 public class StateDao {
 
-    @PersistenceContext
-    private EntityManager entityManager;
+    @PersistenceContext private EntityManager entityManager;
 
     /**
      * This method helps to fetch the existing State by using StateUUID.
      *
-     * @param uuid the state UUID which will be searched in database to find existing state.
+     * @param stateUuid the state UUID which will be searched in database to find existing state.
      * @return StateEntity object if given state exists in database.
      */
-    public StateEntity getStateByUuid(final String uuid) {
+    public StateEntity getStateByUUID(final String stateUuid) {
         try {
-            return entityManager.createNamedQuery("StateByUuid", StateEntity.class).setParameter("uuid", uuid).getSingleResult();
+            return entityManager
+                    .createNamedQuery("getStateByUuid", StateEntity.class)
+                    .setParameter("stateUuid", stateUuid)
+                    .getSingleResult();
         } catch (NoResultException nre) {
             return null;
         }
@@ -38,11 +40,6 @@ public class StateDao {
      * @return List<StateEntity> object.
      */
     public List<StateEntity> getAllStates() {
-        try {
-            return entityManager.createNamedQuery("getAllStates", StateEntity.class).getResultList();
-        } catch (NoResultException nre) {
-            return null;
-        }
+        return entityManager.createNamedQuery("getAllStates", StateEntity.class).getResultList();
     }
 }
-

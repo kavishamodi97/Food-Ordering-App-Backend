@@ -1,5 +1,9 @@
 package com.upgrad.FoodOrderingApp.service.entity;
 
+import org.apache.commons.lang3.builder.EqualsBuilder;
+import org.apache.commons.lang3.builder.HashCodeBuilder;
+import org.apache.commons.lang3.builder.ToStringBuilder;
+import org.apache.commons.lang3.builder.ToStringStyle;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -10,33 +14,33 @@ import javax.validation.constraints.Size;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
-/**
- * CustomerAuth Entity representing the 'customer_auth' table in the 'restaurantdb' database.
- */
 @Entity
-@Table(name = "customer_auth", uniqueConstraints = {@UniqueConstraint(columnNames = {"uuid"})})
+@Table(name = "customer_auth")
 @NamedQueries({
-        @NamedQuery(name = "getCustomerAuthByAccessToken", query = "SELECT c from CustomerAuthEntity c where c.accessToken = :access_Token"),
+        @NamedQuery(
+                name = "customerAuthByToken",
+                query = "select c from CustomerAuthEntity c where c.accessToken=:accessToken")
 })
-
 public class CustomerAuthEntity implements Serializable {
+
     @Id
     @Column(name = "id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "uuid")
     @Size(max = 200)
     @NotNull
+    @Column(name = "uuid")
     private String uuid;
 
-    @ManyToOne()
-    @JoinColumn(name = "customer_id")
+    @ManyToOne
+    @NotNull
     @OnDelete(action = OnDeleteAction.CASCADE)
+    @JoinColumn(name = "customer_id")
     private CustomerEntity customer;
 
-    @Column(name = "access_token")
     @Size(max = 500)
+    @Column(name = "access_token")
     private String accessToken;
 
     @Column(name = "login_at")
@@ -48,8 +52,16 @@ public class CustomerAuthEntity implements Serializable {
     @Column(name = "expires_at")
     private ZonedDateTime expiresAt;
 
+    public CustomerEntity getCustomer() {
+        return customer;
+    }
+
+    public void setCustomer(CustomerEntity customerEntity) {
+        this.customer = customerEntity;
+    }
+
     public Integer getId() {
-        return this.id;
+        return id;
     }
 
     public void setId(Integer id) {
@@ -62,14 +74,6 @@ public class CustomerAuthEntity implements Serializable {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
-    }
-
-    public CustomerEntity getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(CustomerEntity customer) {
-        this.customer = customer;
     }
 
     public String getAccessToken() {
@@ -102,5 +106,20 @@ public class CustomerAuthEntity implements Serializable {
 
     public void setExpiresAt(ZonedDateTime expiresAt) {
         this.expiresAt = expiresAt;
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        return new EqualsBuilder().append(this, obj).isEquals();
+    }
+
+    @Override
+    public int hashCode() {
+        return new HashCodeBuilder().append(this).hashCode();
+    }
+
+    @Override
+    public String toString() {
+        return ToStringBuilder.reflectionToString(this, ToStringStyle.MULTI_LINE_STYLE);
     }
 }
