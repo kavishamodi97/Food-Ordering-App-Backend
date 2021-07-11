@@ -10,6 +10,7 @@ import java.util.List;
 
 @Repository
 public class RestaurantDao {
+
     @PersistenceContext
     private EntityManager entityManager;
 
@@ -64,17 +65,6 @@ public class RestaurantDao {
     public RestaurantEntity updateRestaurantEntity(final RestaurantEntity restaurantEntity) {
         RestaurantEntity updatedRestaurantEntity = entityManager.merge(restaurantEntity);
         return updatedRestaurantEntity;
-    }
-
-    /**
-     * Update the restaurant
-     *
-     * @param restaurantEntity
-     * @return
-     */
-    public RestaurantEntity updateRating(RestaurantEntity restaurantEntity) {
-        entityManager.merge(restaurantEntity);
-        return restaurantEntity;
     }
 
     /**

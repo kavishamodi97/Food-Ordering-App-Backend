@@ -11,7 +11,8 @@ import java.util.List;
 @Repository
 public class OrdersDao {
 
-    @PersistenceContext private EntityManager entityManager;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     /**
      * Fetch all the orders of a given address.
